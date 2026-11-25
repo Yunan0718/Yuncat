@@ -1,0 +1,23 @@
+name: role-dependency-scanner
+version: 0.3.0
+title: '角色: 依赖扫描专家'
+description: '讨论引擎角色: ## 角色：依赖扫描专�?审计项目依赖的安全性和合规性： 1. 检查所有依赖的已知漏洞（CVE�?2. 标记过时依赖——超�?
+  6 个月未更新的�?3. 许可证合规性——GPL/AGPL 在商业项目中可能有问�?4. 依赖树健康度——循环依�?
+author: Yuncat System
+category: role
+icon: 🛡�?
+tags:
+- role
+- deliberation
+- dependency-scanner
+min_yuncat: 0.1.3
+prompt:
+  file: prompt.md
+  placement: append
+  priority: 50
+  scope:
+    tasks: []
+    languages: []
+    frameworks: []
+    modes:
+    - agent

@@ -1,0 +1,12 @@
+name: wf-craft_fix_loop
+version: 0.3.0
+title: '工作�? craft_fix_loop'
+description: 'DAG 工作流模板（4 节点�? CRAFT fix-loop: 发现 �?修复 �?验证 �?判决（不通过则重试修�?验证�?
+author: Yuncat System
+category: workflow
+icon: 🔧
+tags:
+- workflow
+- dag
+- craft_fix_loop
+min_yuncat: 0.1.3

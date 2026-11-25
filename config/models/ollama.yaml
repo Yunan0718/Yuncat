@@ -1,0 +1,19 @@
+provider: ollama
+name: Ollama (本地)
+base_url: http://localhost:11434/v1
+models_url: http://localhost:11434/api/tags
+website_url: https://ollama.com
+api_key_url: ''
+model: ''
+auth: none
+models: []
+# 协议声明：本地 Ollama 无 API Key，模型列表在 origin 下的 /api/tags（不经 /v1）。
+# 没有这几行时，旧代码会因「未配置 API Key」直接 401、并把健康检查拼成
+# http://localhost:11434/v1/api/tags（404）——本地模型永远测不通。
+protocol:
+  auth:
+    scheme: none
+  models:
+    list_key: models
+    id_field: name
+    name_field: name

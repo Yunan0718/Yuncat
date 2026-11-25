@@ -1,0 +1,83 @@
+# Phase 51-B: 工具策略层配置
+# 按 agent/provider 限制可用工具，支持按 group 或工具名 allow/deny。
+
+# 默认策略（当无特定 provider 策略时生效）
+default:
+  profile: coding
+  # allow 支持 group:<name> 或具体工具名
+  allow:
+    - "group:fs"
+    - "group:runtime"
+    - "group:search"
+    - "group:context"
+    - "group:config"
+    - "group:advanced"
+    - "group:browser"
+  deny:
+    - "shell"
+
+# 按 provider / agent 覆盖策略
+byProvider:
+  openclaw:
+    allow:
+      - "group:web"
+      - "group:messaging"
+      - "group:vision"
+    deny: []
+
+# 工具分组映射（可选：未声明分组的工具以注册时 ToolMeta.groups 为准）
+groups:
+  fs:
+    - "read_file"
+    - "write_file"
+    - "list_dir"
+    - "delete_file"
+    - "move_file"
+    - "copy_file"
+  runtime:
+    - "run_command"
+    - "execute_python"
+    - "open_shell"
+    - "close_shell"
+  search:
+    - "search_files"
+    - "web_search"
+    - "web_fetch"
+  context:
+    - "add_context"
+    - "get_context"
+    - "search_memory"
+  config:
+    - "get_config"
+    - "set_config"
+    - "delegate_to_agent"
+  advanced:
+    - "sequential_thinking"
+    - "create_checkpoint"
+    - "restore_checkpoint"
+  web:
+    - "web_search"
+    - "web_fetch"
+  messaging:
+    - "telegram_send"
+    - "discord_send"
+    - "slack_send"
+    - "dingtalk_send"
+    - "wechat_work_send"
+    - "whatsapp_send"
+  vision:
+    - "openclaw_vision"
+  browser:
+    - "browser_open"
+    - "browser_navigate"
+    - "browser_snapshot"
+    - "browser_click"
+    - "browser_type"
+    - "browser_press"
+    - "browser_scroll"
+    - "browser_read_page"
+    - "browser_screenshot"
+    - "browser_wait_for"
+    - "browser_tabs"
+    - "browser_history"
+    - "browser_eval"

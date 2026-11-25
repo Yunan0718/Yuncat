@@ -1,0 +1,64 @@
+# Go Behavior Prompts — Phase 27 (8 条)
+
+go-idioms: |
+  ## Go 惯用写法
+  - 遵循 Effective Go 规范
+  - 使用 gofmt/goimports 自动格式化
+  - 错误作为返回值（if err != nil { return err }）
+  - 小接口（1-3 个方法）——接受接口返回结构体
+  - 使用 context.Context 传递取消信号和截止时间
+
+go-concurrency: |
+  ## Go 并发模式
+  - goroutine 配合 sync.WaitGroup 或 errgroup
+  - channel 用于 goroutine 间通信——"不通过共享内存通信，通过通信共享内存"
+  - select 多路复用 + default 非阻塞
+  - sync.Mutex 保护共享状态——优先用 channel
+  - context 控制 goroutine 生命周期
+
+go-testing: |
+  ## Go 测试规范
+  - 使用标准 testing 包 + testify
+  - 测试文件 _test.go 与源文件同目录
+  - 表驱动测试（table-driven tests）优先
+  - 使用 t.Parallel() 并行测试
+  - 基准测试以 Benchmark 前缀命名
+
+go-error-handling: |
+  ## Go 错误处理
+  - 错误检查不要吞——每个 err 必须处理或显式忽略
+  - 使用 fmt.Errorf("%w", err) 包装错误链
+  - errors.Is / errors.As 检查错误类型
+  - 自定义错误类型实现 Error() 方法
+  - panic 只用于不可恢复的错误（如程序启动时的配置错误）
+
+go-structs: |
+  ## Go 结构体规范
+  - 字段标签使用 json/db 格式
+  - 零值有用的设计（sync.Mutex 无需初始化）
+  - 嵌入而非继承——组合优于继承
+  - 构造函数 NewXxx() 负责初始化
+  - 避免过深的嵌套结构体
+
+go-performance: |
+  ## Go 性能优化
+  - sync.Pool 复用频繁分配的对象
+  - strings.Builder 替代 + 拼接
+  - 预分配 slice 容量（make([]T, 0, cap)）
+  - 使用 pprof 分析热点——不猜测
+  - 避免不必要的 []byte ↔ string 转换
+
+go-modules: |
+  ## Go 模块管理
+  - go mod tidy 清理未使用依赖
+  - 固定依赖版本——不用 latest
+  - internal/ 目录阻止外部导入
+  - 按功能组织包——不按类型（model/handler/repo）
+
+go-security: |
+  ## Go 安全规范
+  - 不硬编码密钥——用环境变量或 vault
+  - SQL 参数化查询——绝不用 fmt.Sprintf
+  - 输入验证——所有外部输入先校验
+  - 文件路径用 filepath.Clean 防止目录遍历
+  - crypto/rand 用于安全随机数——不用 math/rand

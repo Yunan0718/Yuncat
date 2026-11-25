@@ -1,0 +1,12 @@
+name: cmd-docs
+version: 0.3.0
+title: '命令: /docs'
+description: 查询最�?API 文档——通过 context7 获取官方文档
+author: Yuncat System
+category: command
+icon: /
+tags:
+- command
+- slash
+- docs
+min_yuncat: 0.1.3

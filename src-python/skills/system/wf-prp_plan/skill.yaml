@@ -1,0 +1,12 @@
+name: wf-prp_plan
+version: 0.3.0
+title: '工作�? prp_plan'
+description: 'DAG 工作流模板（4 节点�? PRP 规划: analyze �?research �?plan �?validate'
+author: Yuncat System
+category: workflow
+icon: 📋
+tags:
+- workflow
+- dag
+- prp_plan
+min_yuncat: 0.1.3

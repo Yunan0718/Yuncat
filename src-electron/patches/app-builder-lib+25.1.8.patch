@@ -1,0 +1,385 @@
+diff --git a/node_modules/app-builder-lib/templates/nsis/include/allowOnlyOneInstallerInstance.nsh b/node_modules/app-builder-lib/templates/nsis/include/allowOnlyOneInstallerInstance.nsh
+index 97b27fc..f48f686 100644
+--- a/node_modules/app-builder-lib/templates/nsis/include/allowOnlyOneInstallerInstance.nsh
++++ b/node_modules/app-builder-lib/templates/nsis/include/allowOnlyOneInstallerInstance.nsh
+@@ -2,10 +2,103 @@
+     !include "nsProcess.nsh"
+ !endif
+ 
+-!ifmacrondef customCheckAppRunning
+-  !include "getProcessInfo.nsh"
+-  Var pid
+-!endif
++!include "LogicLib.nsh"
++!include "WinMessages.nsh"
++
++; Yuncat 强制关闭宏——在安装器初始化 / CHECK_APP_RUNNING / 卸载前调用。
++; 必须先于 CHECK_APP_RUNNING 宏定义，确保默认弹窗逻辑不会执行。
++; 路径：$APPDATA\Yuncat\.installer-close 须与 main.js 的 appDataDir 一致。
++!define INSTALLER_CLOSE_FLAG "$APPDATA\Yuncat\.installer-close"
++
++!macro FORCE_KILL_YUNCAT
++  ; 0) 安装前禁用开机自启，避免安装后/下次重启再次自动启动导致升级死循环。
++  ;    Electron app.setLoginItemSettings 在 Windows 默认写入 HKCU Run。
++  DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "Yuncat"
++  ; 同时清理可能的手动 HKLM 条目（非默认，但为保险起见）
++  DeleteRegValue HKLM "Software\Microsoft\Windows\CurrentVersion\Run" "Yuncat"
++
++  ; 1) 写关闭标记文件，让运行中的 Yuncat 实例的 close 事件放行，不隐藏到托盘
++  ;    标记路径须与 main.js 的 appDataDir（%APPDATA%\Yuncat）一致
++  Delete "${INSTALLER_CLOSE_FLAG}"
++  nsExec::ExecToLog "\"$SYSDIR\cmd.exe\" /c if not exist \"$APPDATA\Yuncat\" mkdir \"$APPDATA\Yuncat\" & echo 1 > \"${INSTALLER_CLOSE_FLAG}\""
++
++  ; 2) 用 PowerShell 精确检测 Yuncat.exe 是否正在运行。
++  ;    避免 FindWindow 误匹配安装器自身窗口、浏览器窗口或其他含 "Yuncat" 标题的窗口。
++  ;    安装器进程名为 Yuncat_*-setup.exe，不会被 Get-Process Yuncat 匹配。
++  DetailPrint "Detecting running Yuncat process..."
++  ; PowerShell variables use $; in NSIS strings $ must be escaped as $$ so the shell sees $c.
++  nsExec::ExecToStack "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"try { $$c = (Get-Process -Name Yuncat -ErrorAction SilentlyContinue | Measure-Object).Count; [string]$$c } catch { '0' }\""
++  Pop $R0  ; PowerShell exit code
++  Pop $R1  ; stdout: process count as string (trimmed by nsExec)
++  ${If} $R0 == 0
++    ${If} $R1 == "0"
++      DetailPrint "No running Yuncat process detected"
++      Goto kill_done
++    ${EndIf}
++  ${EndIf}
++
++  ; 3) 优雅关闭：给实际 Yuncat 主窗口发 WM_CLOSE，触发 Electron 正常 quit → shutdownBackend
++  ;    对标 VS Code / Discord：先尝试 WM_CLOSE，让应用自己完成数据库/子进程清理。
++  FindWindow $0 "Chrome_WidgetWin_1" "Yuncat"
++  ${If} $0 != 0
++    DetailPrint "Requesting graceful shutdown (WM_CLOSE)..."
++    SendMessage $0 ${WM_CLOSE} 0 0 /TIMEOUT=3000
++  ${EndIf}
++
++  ; 4) 等待 Yuncat 优雅退出，最多 12s
++  ;    taskkill /IM /T 返回 128 表示进程已不存在（成功检测）。
++  StrCpy $R1 0
++wait_quit:
++  IntOp $R1 $R1 + 1
++  nsExec::Exec '"$SYSDIR\cmd.exe" /c taskkill /IM "Yuncat.exe" /T /fi "USERNAME eq %USERNAME%"'
++  Pop $R0
++  ${If} $R0 == 128
++    DetailPrint "Yuncat exited gracefully"
++    Goto quit_done
++  ${EndIf}
++  ${If} $R1 < 8
++    Sleep 1500
++    Goto wait_quit
++  ${EndIf}
++  DetailPrint "Graceful shutdown timed out, switching to force kill"
++quit_done:
++
++  ; 5) 强制结束进程树，循环确认最多 5 次
++  ;    不强杀 SearchIndexer/SearchProtocolHost（SYSTEM 服务，主流安装器从不杀它），
++  ;    文件锁问题交给 Windows Restart Manager API 让系统
++  ;    自己结束占用 Yuncat.exe 的进程（VS Code / Chrome / Windows Update 同款）。
++  IfFileExists "$INSTDIR\resources\restartmanager-kill.ps1" 0 +2
++    nsExec::ExecToLog "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File \"$INSTDIR\resources\restartmanager-kill.ps1\" -TargetPath \"$INSTDIR\Yuncat.exe\""
++  StrCpy $R1 0
++kill_loop:
++  IntOp $R1 $R1 + 1
++  nsExec::ExecToLog '"$SYSDIR\cmd.exe" /c taskkill /F /IM "Yuncat.exe" /T /fi "USERNAME eq %USERNAME%"'
++  Pop $R0
++  ${If} $R0 == 128
++    DetailPrint "No running Yuncat.exe"
++    Goto kill_done
++  ${EndIf}
++  ${If} $R0 == 1
++    ; taskkill 返回 1 通常表示访问被拒绝（权限不足）。
++    ; 如果 Yuncat 以管理员运行而安装器没有，无论如何都杀不掉。
++    MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "Yuncat 无法关闭：权限不足。$\n$\n当前运行的 Yuncat 可能以管理员权限启动，而安装程序未获得提升。$\n请以管理员身份重新运行安装程序，或在任务管理器中手动结束 Yuncat 后点击重试。" /SD IDCANCEL IDRETRY kill_loop
++    Quit
++  ${EndIf}
++  DetailPrint "Yuncat still running, retrying force kill ($R1/5)..."
++  Sleep 1500
++  ; PowerShell 兜底：强制结束所有名为 Yuncat 的进程
++  nsExec::ExecToLog 'powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command "Get-Process Yuncat -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue; Start-Sleep -Milliseconds 800"'
++  Sleep 2000
++  ${If} $R1 > 4
++    MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "Yuncat 无法关闭。$\n$\n可能原因：Yuncat 进程卡死或以更高权限运行。$\n请打开任务管理器结束 Yuncat 进程后点击重试。" /SD IDCANCEL IDRETRY kill_loop
++    Quit
++  ${EndIf}
++  Goto kill_loop
++
++kill_done:
++  ; 6) 清理关闭标记
++  Delete "${INSTALLER_CLOSE_FLAG}"
++!macroend
+ 
+ # http://nsis.sourceforge.net/Allow_only_one_installer_instance
+ !macro ALLOW_ONLY_ONE_INSTALLER_INSTANCE
+@@ -30,89 +126,7 @@
+ !macroend
+ 
+ !macro CHECK_APP_RUNNING
+-    !ifmacrodef customCheckAppRunning
+-      !insertmacro customCheckAppRunning
+-    !else
+-      !insertmacro _CHECK_APP_RUNNING
+-    !endif
+-!macroend
+-
+-!macro FIND_PROCESS _FILE _ERR
+-  !ifdef INSTALL_MODE_PER_ALL_USERS
+-    ${nsProcess::FindProcess} "${_FILE}" ${_ERR}
+-  !else
+-    # find process owned by current user
+-    nsExec::Exec `"$SYSDIR\cmd.exe" /c tasklist /FI "USERNAME eq %USERNAME%" /FI "IMAGENAME eq ${_FILE}" /FO csv | "$SYSDIR\find.exe" "${_FILE}"`
+-    Pop ${_ERR}
+-  !endif
+-!macroend
+-
+-!macro _CHECK_APP_RUNNING
+-  ${GetProcessInfo} 0 $pid $1 $2 $3 $4
+-  ${if} $3 != "${APP_EXECUTABLE_FILENAME}"
+-    ${if} ${isUpdated}
+-      # allow app to exit without explicit kill
+-      Sleep 300
+-    ${endIf}
+-
+-    !insertmacro FIND_PROCESS "${APP_EXECUTABLE_FILENAME}" $R0
+-    ${if} $R0 == 0
+-      ${if} ${isUpdated}
+-        # allow app to exit without explicit kill
+-        Sleep 1000
+-        Goto doStopProcess
+-      ${endIf}
+-      MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION "$(appRunning)" /SD IDOK IDOK doStopProcess
+-      Quit
+-
+-      doStopProcess:
+-
+-      DetailPrint `Closing running "${PRODUCT_NAME}"...`
+-
+-      # https://github.com/electron-userland/electron-builder/issues/2516#issuecomment-372009092
+-      !ifdef INSTALL_MODE_PER_ALL_USERS
+-        nsExec::Exec `taskkill /im "${APP_EXECUTABLE_FILENAME}" /fi "PID ne $pid"`
+-      !else
+-        nsExec::Exec `"$SYSDIR\cmd.exe" /c taskkill /im "${APP_EXECUTABLE_FILENAME}" /fi "PID ne $pid" /fi "USERNAME eq %USERNAME%"`
+-      !endif
+-      # to ensure that files are not "in-use"
+-      Sleep 300
+-
+-      # Retry counter
+-      StrCpy $R1 0
+-
+-      loop:
+-        IntOp $R1 $R1 + 1
+-
+-        !insertmacro FIND_PROCESS "${APP_EXECUTABLE_FILENAME}" $R0
+-        ${if} $R0 == 0
+-          # wait to give a chance to exit gracefully
+-          Sleep 1000
+-          !ifdef INSTALL_MODE_PER_ALL_USERS
+-            nsExec::Exec `taskkill /f /im "${APP_EXECUTABLE_FILENAME}" /fi "PID ne $pid"`
+-          !else
+-            nsExec::Exec `"$SYSDIR\cmd.exe" /c taskkill /f /im "${APP_EXECUTABLE_FILENAME}" /fi "PID ne $pid" /fi "USERNAME eq %USERNAME%"`
+-          !endif
+-          !insertmacro FIND_PROCESS "${APP_EXECUTABLE_FILENAME}" $R0
+-          ${If} $R0 == 0
+-            DetailPrint `Waiting for "${PRODUCT_NAME}" to close.`
+-            Sleep 2000
+-          ${else}
+-            Goto not_running
+-          ${endIf}
+-        ${else}
+-          Goto not_running
+-        ${endIf}
+-
+-        # App likely running with elevated permissions.
+-        # Ask user to close it manually
+-        ${if} $R1 > 1
+-          MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "$(appCannotBeClosed)" /SD IDCANCEL IDRETRY loop
+-          Quit
+-        ${else}
+-          Goto loop
+-        ${endIf}
+-      not_running:
+-    ${endIf}
+-  ${endIf}
++    ; Yuncat: 直接强制结束运行中的进程，不显示 electron-builder 默认的"无法关闭"弹窗。
++    ; 默认实现只发 WM_CLOSE，Yuncat 会隐藏到托盘导致误判。
++    !insertmacro FORCE_KILL_YUNCAT
+ !macroend
+diff --git a/node_modules/app-builder-lib/templates/nsis/include/extractAppPackage.nsh b/node_modules/app-builder-lib/templates/nsis/include/extractAppPackage.nsh
+index f5470bf..4642a7e 100644
+--- a/node_modules/app-builder-lib/templates/nsis/include/extractAppPackage.nsh
++++ b/node_modules/app-builder-lib/templates/nsis/include/extractAppPackage.nsh
+@@ -98,9 +98,48 @@
+   Pop $R0
+   SetOutPath $R0
+ 
++  # Yuncat: Before copying new files, if $OUTDIR already contains files from a
++  # previous install, do not try to overwrite them in-place. Windows Search
++  # Indexer, Windows Defender real-time scan or shell extensions may hold shared
++  # locks on app.asar / Yuncat.exe, which makes CopyFiles fail and produces the
++  # misleading "app cannot be closed" prompt even though Yuncat is not running.
++  # Use the same upgrade strategy as Squirrel.Windows, Discord, Slack and Chrome:
++  # rename the entire existing directory to $OUTDIR.old.<timestamp>, install into
++  # a clean $OUTDIR, and schedule the old directory for deletion on reboot.
++  ${if} ${FileExists} "$OUTDIR\*.*"
++    DetailPrint `Existing install detected in $OUTDIR, renaming old directory...`
++    System::Call 'kernel32::GetTickCount() i .r2'
++    StrCpy $R9 "$OUTDIR.old.$R2"
++    find_unique_outdir:
++      IfFileExists "$R9" 0 do_rename_outdir
++      IntOp $R2 $R2 + 1
++      StrCpy $R9 "$OUTDIR.old.$R2"
++      Goto find_unique_outdir
++    do_rename_outdir:
++      ClearErrors
++      Rename "$OUTDIR" "$R9"
++      IfErrors 0 rename_outdir_ok
++        DetailPrint `NSIS rename failed, trying PowerShell directory move...`
++        nsExec::ExecToLog "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"try { Move-Item -LiteralPath '$OUTDIR' -Destination '$R9' -Force -ErrorAction Stop } catch { exit 1 }\""
++        Pop $R0
++        ${If} $R0 == 0
++          Goto rename_outdir_ok
++        ${EndIf}
++        DetailPrint `PowerShell directory move failed, will use per-file fallback`
++        Goto per_file_rename_fallback_init
++      rename_outdir_ok:
++        RMDir /r /REBOOTOK "$R9"
++        DetailPrint `Old install directory renamed to $R9, scheduled deletion on reboot`
++        CreateDirectory "$OUTDIR"
++  ${else}
++    CreateDirectory "$OUTDIR"
++  ${endIf}
++
+   # Retry counter
+   StrCpy $R1 0
+ 
++  per_file_rename_fallback_init:
++
+   LoopExtract7za:
+     IntOp $R1 $R1 + 1
+ 
+@@ -109,12 +148,38 @@
+     IfErrors 0 DoneExtract7za
+ 
+     DetailPrint `Can't modify "${PRODUCT_NAME}"'s files.`
+-    ${if} $R1 < 5
++
++    # Yuncat: before giving up, try to kill any process that still holds a
++    # handle on the target executable (e.g. Yuncat itself, Windows Search
++    # Indexer, Defender real-time scan).
++    ${if} $R1 == 1
++      # Use the Windows Restart Manager API (Rstrtmgr.dll) to ask Windows to
++      # shut down applications that are locking Yuncat.exe. This is the same
++      # mechanism VS Code / Chrome / Windows Update use to replace in-use files.
++      IfFileExists "$OUTDIR\resources\restartmanager-kill.ps1" 0 +2
++        nsExec::ExecToLog "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File \"$OUTDIR\resources\restartmanager-kill.ps1\" -TargetPath \"$OUTDIR\${APP_EXECUTABLE_FILENAME}\""
++    ${endIf}
++    nsExec::ExecToLog "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"try { $$proc = Get-Process | Where-Object { $$_.Modules.FileName -contains '$OUTDIR\${APP_EXECUTABLE_FILENAME}' } ; if ($$proc) { Stop-Process -InputObject $$proc -Force -ErrorAction SilentlyContinue } } catch { }\""
++
++    ${if} $R1 < 3
+       # Try copying a few times before asking for a user action.
+       Goto RetryExtract7za
++    ${elseif} $R1 == 3
++      ; Yuncat fallback: some files are still locked (Defender/Search Indexer).
++      ; Rename existing locked files to .old so the atomic CopyFiles can succeed,
++      ; and schedule the .old files for deletion on reboot.
++      DetailPrint `Renaming locked files to .old and scheduling deletion on reboot...`
++      nsExec::ExecToLog "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"$$src = '$PLUGINSDIR\7z-out'; $$dst = '$OUTDIR'; Get-ChildItem -Path $$src -Recurse -File | ForEach-Object { $$rel = $$_.FullName.Substring($$src.Length + 1); $$dstFile = Join-Path $$dst $$rel; if (Test-Path -LiteralPath $$dstFile) { $$oldFile = \"$$dstFile.old\"; Remove-Item -Path $$oldFile -Force -ErrorAction SilentlyContinue; Rename-Item -Path $$dstFile -NewName $$oldFile -Force -ErrorAction SilentlyContinue } }\""
++      Sleep 1000
++      ; Try the atomic copy again after renaming.
++      CopyFiles /SILENT "$PLUGINSDIR\7z-out\*" $OUTDIR
++      IfErrors 0 DoneExtract7za
++      Goto RetryExtract7za
++    ${elseif} $R1 < 8
++      Goto RetryExtract7za
+     ${else}
+       MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "$(appCannotBeClosed)" /SD IDRETRY IDCANCEL AbortExtract7za
+-    ${endIf}
++    ${EndIf}
+ 
+     # As an absolutely last resort after a few automatic attempts and user
+     # intervention - we will just overwrite everything with `Nsis7z::Extract`
+@@ -131,7 +200,7 @@
+     Quit
+ 
+   RetryExtract7za:
+-    Sleep 1000
++    Sleep 1500
+     Goto LoopExtract7za
+ 
+   DoneExtract7za:
+diff --git a/node_modules/app-builder-lib/templates/nsis/include/installUtil.nsh b/node_modules/app-builder-lib/templates/nsis/include/installUtil.nsh
+index 4736774..373d567 100644
+--- a/node_modules/app-builder-lib/templates/nsis/include/installUtil.nsh
++++ b/node_modules/app-builder-lib/templates/nsis/include/installUtil.nsh
+@@ -215,7 +215,17 @@ Function uninstallOldVersion
+   UninstallLoop:
+     IntOp $R5 $R5 + 1
+ 
+-    ${if} $R5 > 5
++    ${if} $R5 == 1
++      ; Yuncat: Windows Search Indexer / Defender real-time scan may hold shared locks
++      ; on app.asar / Yuncat.exe, causing the old uninstaller/copy to fail.
++      ; Use the Windows Restart Manager API (VS Code / Chrome / Windows Update mechanism)
++      ; to release them; no permanent Defender exclusion and no killing SYSTEM services.
++      IfFileExists "$installationDir\resources\restartmanager-kill.ps1" 0 +2
++        nsExec::ExecToLog "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File \"$installationDir\resources\restartmanager-kill.ps1\" -TargetPath \"$installationDir\${APP_EXECUTABLE_FILENAME}\""
++      Sleep 1500
++    ${endIf}
++
++    ${if} $R5 > 8
+       MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "$(appCannotBeClosed)" /SD IDCANCEL IDRETRY OneMoreAttempt
+       Return
+     ${endIf}
+@@ -233,7 +243,37 @@ Function uninstallOldVersion
+     CheckResult:
+       ${if} $R0 == 0
+         Return
+-      ${endIf}
++      ${EndIf}
++
++      ; Yuncat fallback: old uninstaller failed (common with code 2 when antivirus
++      ; or Windows Search Indexer holds locks on app.asar / Yuncat.exe).
++      ; Instead of aborting, rename the old install directory so the new install
++      ; can proceed into a clean $INSTDIR, and schedule the old directory for
++      ; deletion on reboot. This matches the Chrome / Squirrel strategy of not
++      ; requiring in-place replacement of locked files.
++      ${if} $R5 >= 3
++        DetailPrint `Uninstaller failed (code $R0), renaming old install dir for fresh install...`
++        StrCpy $R6 "$installationDir.old.$R0"
++        StrCpy $R7 0
++        find_unique_old:
++          IfFileExists "$R6" 0 do_rename_old
++          IntOp $R7 $R7 + 1
++          StrCpy $R6 "$installationDir.old.$R0.$R7"
++          Goto find_unique_old
++        do_rename_old:
++          ClearErrors
++          Rename "$installationDir" "$R6"
++          IfErrors 0 rename_old_ok
++            DetailPrint `Failed to rename old install dir, aborting.`
++            MessageBox MB_OK|MB_ICONSTOP "Unable to remove or rename the old Yuncat install directory. Please reboot and try again."
++            SetErrorLevel 2
++            Quit
++          rename_old_ok:
++            RMDir /r /REBOOTOK "$R6"
++            DetailPrint `Old install dir renamed to $R6, scheduled deletion on reboot`
++            StrCpy $R0 0
++            Return
++      ${EndIf}
+ 
+     Sleep 1000
+     Goto UninstallLoop
+diff --git a/node_modules/app-builder-lib/templates/nsis/installer.nsi b/node_modules/app-builder-lib/templates/nsis/installer.nsi
+index 1b88a9d..035b96f 100644
+--- a/node_modules/app-builder-lib/templates/nsis/installer.nsi
++++ b/node_modules/app-builder-lib/templates/nsis/installer.nsi
+@@ -17,7 +17,9 @@ Var oldMenuDirectory
+     RequestExecutionLevel admin
+   !endif
+ !else
+-  RequestExecutionLevel user
++  ; Yuncat: 使用 highest 确保安装器能结束以管理员运行的 Yuncat 进程。
++  ; 默认 user 在目标进程权限更高时 taskkill /F 会失败，导致"无法关闭"弹窗。
++  RequestExecutionLevel highest
+ !endif
+ 
+ !ifdef BUILD_UNINSTALLER

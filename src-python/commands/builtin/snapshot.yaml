@@ -1,0 +1,12 @@
+# /snapshot — 快照管理
+name: snapshot
+slash_command: /snapshot
+description: "查看或回退快照——Side-git 安全网"
+category: maintenance
+arguments:
+  - name: action
+    type: string
+    description: "list 或 restore"
+  - name: task_id
+    type: string
+    description: "任务 ID（restore 时需要）"

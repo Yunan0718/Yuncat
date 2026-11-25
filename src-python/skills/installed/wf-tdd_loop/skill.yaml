@@ -1,0 +1,12 @@
+name: wf-tdd_loop
+version: 0.3.0
+title: '工作�? tdd_loop'
+description: 'DAG 工作流模板（3 节点�? TDD 循环: 写测�?�?实现 �?重构'
+author: Yuncat System
+category: workflow
+icon: 🧪
+tags:
+- workflow
+- dag
+- tdd_loop
+min_yuncat: 0.1.3

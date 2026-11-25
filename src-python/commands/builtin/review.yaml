@@ -1,0 +1,13 @@
+# /review — 代码审查
+name: review
+slash_command: /review
+description: "代码审查——检查代码质量、安全性、性能"
+category: review
+agent_routing:
+  role: code-reviewer
+  mode: agent
+workflow_template: code_review
+arguments:
+  - name: scope
+    type: string
+    description: "审查范围（文件路径或模块名，默认当前变更）"

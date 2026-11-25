@@ -1,0 +1,12 @@
+name: wf-doc_generation
+version: 0.3.0
+title: '工作�? doc_generation'
+description: 'DAG 工作流模板（3 节点�? 文档生成工作流：读取源码 �?提取API �?生成文档'
+author: Yuncat System
+category: workflow
+icon: 📝
+tags:
+- workflow
+- dag
+- doc_generation
+min_yuncat: 0.1.3

@@ -1,0 +1,12 @@
+name: cmd-plan
+version: 0.3.0
+title: '命令: /plan'
+description: 进入计划模式——Agent 分析需求并生成分步执行计划
+author: Yuncat System
+category: command
+icon: /
+tags:
+- command
+- slash
+- plan
+min_yuncat: 0.1.3

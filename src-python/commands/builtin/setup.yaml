@@ -1,0 +1,12 @@
+# /setup — AI 一键配置项目（语言检测+Skills+MCP+规则+CLAUDE.md）
+name: setup
+slash_command: /setup
+description: "AI 一键配置项目：检测技术栈 → 推荐并安装 Skills → 配置 MCP → 初始化规则 → 生成 CLAUDE.md"
+category: config
+agent_routing:
+  mode: agent
+workflow_template: auto_setup_project
+arguments:
+  - name: path
+    type: string
+    description: "项目路径（默认当前工作区）"

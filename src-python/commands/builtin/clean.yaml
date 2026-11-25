@@ -1,0 +1,10 @@
+# /clean — 死代码清理
+name: clean
+slash_command: /clean
+description: "清理死代码——扫描未使用的代码并移除"
+category: maintenance
+workflow_template: dead_code_cleanup
+arguments:
+  - name: scope
+    type: string
+    description: "清理范围（目录路径）"

@@ -1,0 +1,282 @@
+[
+  {
+    "file": "token_budget.py",
+    "rule": "R3",
+    "snippet": "except Exception: pass",
+    "line": 301,
+    "reason": "best-effort 清理——后续可改为 logging.debug"
+  },
+  {
+    "file": "hooks/registry.py",
+    "rule": "R1",
+    "snippet": "dangerous_prefixes = (\"C:\\\\Windows\", \"C:\\\\Windows\\\\System32\", \"/etc\", \"/usr\", \"/bin\", \"/boot\")",
+    "line": 170,
+    "reason": "危险路径黑名单守卫列表，非硬编码访问路径"
+  },
+  {
+    "file": "repositories/knowledge_repo.py",
+    "rule": "R4",
+    "snippet": "cursor = await conn.execute( \"SELECT n.id, n.title, n.content, n.parent_id, n.score, n.source, n.tags, \" \"n.created_at, ",
+    "line": 80,
+    "reason": "动态 SQL 构造（列名/表名来自硬编码白名单，值已参数化）或 PRAGMA 不支持参数化"
+  },
+  {
+    "file": "repositories/mcp_repo.py",
+    "rule": "R4",
+    "snippet": "cursor = await conn.execute( f\"UPDATE mcp_servers SET {set_clause} WHERE id=?\", values, )",
+    "line": 73,
+    "reason": "动态 SQL 构造（列名/表名来自硬编码白名单，值已参数化）或 PRAGMA 不支持参数化"
+  },
+  {
+    "file": "repositories/memories_repo.py",
+    "rule": "R4",
+    "snippet": "cursor = await conn.execute( f\"UPDATE memories SET {set_clause} WHERE id=?\", values, )",
+    "line": 39,
+    "reason": "动态 SQL 构造（列名/表名来自硬编码白名单，值已参数化）或 PRAGMA 不支持参数化"
+  },
+  {
+    "file": "repositories/memory_repo.py",
+    "rule": "R4",
+    "snippet": "cursor = await self.db.execute(f\"SELECT {col} FROM dream_state WHERE id=1\")",
+    "line": 30,
+    "reason": "动态 SQL 构造（列名/表名来自硬编码白名单，值已参数化）或 PRAGMA 不支持参数化"
+  },
+  {
+    "file": "repositories/memory_repo.py",
+    "rule": "R4",
+    "snippet": "await self.db.execute(f\"UPDATE dream_state SET {col}=? WHERE id=1\", (value,))",
+    "line": 47,
+    "reason": "动态 SQL 构造（列名/表名来自硬编码白名单，值已参数化）或 PRAGMA 不支持参数化"
+  },
+  {
+    "file": "repositories/plan_step_repo.py",
+    "rule": "R4",
+    "snippet": "cursor = await conn.execute( f\"UPDATE plan_steps SET status=?, updated_at=? {where_clause}\", (status, int(_time.time()),",
+    "line": 153,
+    "reason": "动态 SQL 构造（列名/表名来自硬编码白名单，值已参数化）或 PRAGMA 不支持参数化"
+  },
+  {
+    "file": "repositories/plan_step_repo.py",
+    "rule": "R4",
+    "snippet": "cursor = await conn.execute( f\"UPDATE plan_steps SET status=?, output=?, updated_at=? {where_clause}\", (status, output, ",
+    "line": 158,
+    "reason": "动态 SQL 构造（列名/表名来自硬编码白名单，值已参数化）或 PRAGMA 不支持参数化"
+  },
+  {
+    "file": "repositories/roles_repo.py",
+    "rule": "R4",
+    "snippet": "cursor = await conn.execute(f\"UPDATE roles SET {set_clause} WHERE id=?\", values)",
+    "line": 61,
+    "reason": "动态 SQL 构造（列名/表名来自硬编码白名单，值已参数化）或 PRAGMA 不支持参数化"
+  },
+  {
+    "file": "repositories/schema_checks.py",
+    "rule": "R4",
+    "snippet": "cursor = await conn.execute(f\"PRAGMA table_info({table})\")",
+    "line": 78,
+    "reason": "动态 SQL 构造（列名/表名来自硬编码白名单，值已参数化）或 PRAGMA 不支持参数化"
+  },
+  {
+    "file": "routes/config.py",
+    "rule": "R4",
+    "snippet": "cursor5 = await db.execute( \"SELECT id, title, content, source, score, tags, created_at \" f\"FROM knowledge_nodes WHERE s",
+    "line": 72,
+    "reason": "动态 SQL 构造（列名/表名来自硬编码白名单，值已参数化）或 PRAGMA 不支持参数化"
+  },
+  {
+    "file": "routes/config.py",
+    "rule": "R4",
+    "snippet": "cursor6 = await db.execute( \"SELECT c.session_id, c.role, c.content, c.created_at, \" \"s.id AS s_id FROM conversations c ",
+    "line": 80,
+    "reason": "动态 SQL 构造（列名/表名来自硬编码白名单，值已参数化）或 PRAGMA 不支持参数化"
+  },
+  {
+    "file": "routes/config.py",
+    "rule": "R4",
+    "snippet": "cursor = await db.execute(f\"SELECT COUNT(*) FROM {table}\")",
+    "line": 224,
+    "reason": "动态 SQL 构造（列名/表名来自硬编码白名单，值已参数化）或 PRAGMA 不支持参数化"
+  },
+  {
+    "file": "routes/hooks.py",
+    "rule": "R4",
+    "snippet": "cursor = await request.app.state.db.execute( \"SELECT id, loop_id, trigger_type, priority, status, created_at \" \"FROM loo",
+    "line": 92,
+    "reason": "动态 SQL 构造（列名/表名来自硬编码白名单，值已参数化）或 PRAGMA 不支持参数化"
+  },
+  {
+    "file": "routes/knowledge.py",
+    "rule": "R4",
+    "snippet": "pc = await db.execute( f\"SELECT id, title, score, source, tags FROM knowledge_nodes WHERE id IN ({placeholders})\", tuple",
+    "line": 123,
+    "reason": "动态 SQL 构造（列名/表名来自硬编码白名单，值已参数化）或 PRAGMA 不支持参数化"
+  },
+  {
+    "file": "routes/system.py",
+    "rule": "R4",
+    "snippet": "cursor = await request.app.state.db.execute( \"SELECT event_data FROM analytics_events \" \"WHERE event_type='token_usage' ",
+    "line": 243,
+    "reason": "动态 SQL 构造（列名/表名来自硬编码白名单，值已参数化）或 PRAGMA 不支持参数化"
+  },
+  {
+    "file": "routes/system.py",
+    "rule": "R4",
+    "snippet": "cursor = await request.app.state.db.execute( \"SELECT event_data FROM analytics_events \" \"WHERE event_type='arena_vote' A",
+    "line": 333,
+    "reason": "动态 SQL 构造（列名/表名来自硬编码白名单，值已参数化）或 PRAGMA 不支持参数化"
+  },
+  {
+    "file": "routes/workflow_triggers.py",
+    "rule": "R3",
+    "snippet": "except Exception: pass",
+    "line": 62,
+    "reason": "best-effort 清理——后续可改为 logging.debug"
+  },
+  {
+    "file": "routes/ws.py",
+    "rule": "R3",
+    "snippet": "except Exception: pass",
+    "line": 204,
+    "reason": "best-effort 清理——后续可改为 logging.debug"
+  },
+  {
+    "file": "services/agent_profile.py",
+    "rule": "R3",
+    "snippet": "except Exception: pass",
+    "line": 62,
+    "reason": "best-effort 清理——后续可改为 logging.debug"
+  },
+  {
+    "file": "services/approval_inbox.py",
+    "rule": "R3",
+    "snippet": "except Exception: pass  # 保留原始字符串",
+    "line": 145,
+    "reason": "best-effort 清理——后续可改为 logging.debug"
+  },
+  {
+    "file": "services/prompt_agent.py",
+    "rule": "R3",
+    "snippet": "except Exception: pass",
+    "line": 517,
+    "reason": "best-effort 清理——后续可改为 logging.debug"
+  },
+  {
+    "file": "services/prompt_agent.py",
+    "rule": "R3",
+    "snippet": "except Exception: pass  # best-effort——失败回退到 role default",
+    "line": 363,
+    "reason": "best-effort 清理——后续可改为 logging.debug"
+  },
+  {
+    "file": "skills/generate_system_skills.py",
+    "rule": "R2",
+    "snippet": "print(f\"Generated {count} individual skills in {DST}\")",
+    "line": 112,
+    "reason": "构建脚本（非运行时），print() 为 CLI 输出"
+  },
+  {
+    "file": "tools/_gen_baseline_json.py",
+    "rule": "R2",
+    "snippet": "print(f\"Wrote {len(baseline)} entries to {out_path}\", file=sys.stderr)",
+    "line": 43,
+    "reason": "构建脚本（非运行时），print() 为 CLI 输出"
+  },
+  {
+    "file": "tools/builtin/system_tool_command.py",
+    "rule": "R3",
+    "snippet": "except Exception: pass",
+    "line": 301,
+    "reason": "best-effort 清理——后续可改为 logging.debug"
+  },
+  {
+    "file": "tools/builtin/system_tool_search.py",
+    "rule": "R3",
+    "snippet": "except Exception: pass",
+    "line": 166,
+    "reason": "best-effort 清理——后续可改为 logging.debug"
+  },
+  {
+    "file": "tools/builtin/system_tool_search.py",
+    "rule": "R3",
+    "snippet": "except Exception: # 单例调用失败（如子进程崩溃）——走 search_files fallback pass",
+    "line": 178,
+    "reason": "best-effort 清理——后续可改为 logging.debug"
+  },
+  {
+    "file": "services/agent/agent_lifecycle.py",
+    "rule": "R3",
+    "snippet": "except Exception: pass",
+    "line": 424,
+    "reason": "best-effort 清理——后续可改为 logging.debug"
+  },
+  {
+    "file": "services/agent/agent_service.py",
+    "rule": "R4",
+    "snippet": "cursor = await self.db.execute( f\"UPDATE tasks SET status=?, error_message=?, completed_at=? {where_clause}\", (status, e",
+    "line": 272,
+    "reason": "动态 SQL 构造（列名/表名来自硬编码白名单，值已参数化）或 PRAGMA 不支持参数化"
+  },
+  {
+    "file": "services/agent/agent_service.py",
+    "rule": "R4",
+    "snippet": "cursor = await self.db.execute( f\"UPDATE tasks SET status=?, output=?, completed_at=? {where_clause}\", (status, output, ",
+    "line": 277,
+    "reason": "动态 SQL 构造（列名/表名来自硬编码白名单，值已参数化）或 PRAGMA 不支持参数化"
+  },
+  {
+    "file": "services/agent/agent_service.py",
+    "rule": "R4",
+    "snippet": "cursor = await self.db.execute( f\"UPDATE tasks SET status=?, completed_at=? {where_clause}\", (status, int(_time.time()),",
+    "line": 282,
+    "reason": "动态 SQL 构造（列名/表名来自硬编码白名单，值已参数化）或 PRAGMA 不支持参数化"
+  },
+  {
+    "file": "services/agent/agent_tool_loop.py",
+    "rule": "R3",
+    "snippet": "except Exception: pass",
+    "line": 442,
+    "reason": "best-effort 清理——后续可改为 logging.debug"
+  },
+  {
+    "file": "services/evolution/skill_md_parser.py",
+    "rule": "R3",
+    "snippet": "except Exception: pass",
+    "line": 57,
+    "reason": "best-effort 清理——后续可改为 logging.debug"
+  },
+  {
+    "file": "services/infra/file_checkpoint.py",
+    "rule": "R3",
+    "snippet": "except Exception: pass",
+    "line": 171,
+    "reason": "best-effort 清理——后续可改为 logging.debug"
+  },
+  {
+    "file": "services/long_task/executor.py",
+    "rule": "R3",
+    "snippet": "except Exception: pass",
+    "line": 282,
+    "reason": "best-effort 清理——后续可改为 logging.debug"
+  },
+  {
+    "file": "services/memory/memory_sync.py",
+    "rule": "R4",
+    "snippet": "cursor = await self.db.execute( \"SELECT title, content, score, source FROM knowledge_nodes \" f\"WHERE score >= 0.7 ORDER ",
+    "line": 62,
+    "reason": "动态 SQL 构造（列名/表名来自硬编码白名单，值已参数化）或 PRAGMA 不支持参数化"
+  },
+  {
+    "file": "services/memory/memory_tree.py",
+    "rule": "R4",
+    "snippet": "cursor = await self.db.execute( f\"SELECT id, last_accessed, created_at FROM knowledge_nodes \" f\"WHERE id IN ({placeholde",
+    "line": 304,
+    "reason": "动态 SQL 构造（列名/表名来自硬编码白名单，值已参数化）或 PRAGMA 不支持参数化"
+  },
+  {
+    "file": "services/memory/memory_tree.py",
+    "rule": "R4",
+    "snippet": "await self.db.execute( f\"UPDATE knowledge_nodes \" f\"SET last_accessed = ?, \" f\"    score = MIN(1.0, score + ?) \" f\"WHERE",
+    "line": 328,
+    "reason": "动态 SQL 构造（列名/表名来自硬编码白名单，值已参数化）或 PRAGMA 不支持参数化"
+  }
+]

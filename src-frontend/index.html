@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yuncat</title>
+    <style>
+      :root {
+        --loading-bg: #FCFCFD;
+        --loading-fg: #5F6B7C;
+        --loading-spinner-track: #E1E3E7;
+        --loading-spinner-accent: #6C7AE0;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --loading-bg: #131415;
+          --loading-fg: #9B9EA8;
+          --loading-spinner-track: #2E3035;
+          --loading-spinner-accent: #6C7AE0;
+        }
+      }
+      #root-loading {
+        display: flex; align-items: center; justify-content: center;
+        height: 100vh; width: 100vw;
+        background: var(--loading-bg); color: var(--loading-fg);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 13px;
+      }
+      #root-loading .spinner {
+        width: 28px; height: 28px;
+        border: 3px solid var(--loading-spinner-track);
+        border-top-color: var(--loading-spinner-accent);
+        border-radius: 50%;
+        animation: y-spin 0.7s linear infinite;
+        margin-right: 12px;
+      }
+      @keyframes y-spin { to { transform: rotate(360deg); } }
+    </style>
+  </head>
+  <body>
+    <div id="root-loading"><div class="spinner"></div>Yuncat</div>
+    <div id="root"></div>
+    <div id="overlay-root"></div>
+    <script type="module" src="/src/index.tsx"></script>
+  </body>
+</html>

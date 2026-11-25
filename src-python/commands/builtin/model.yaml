@@ -1,0 +1,7 @@
+# /model — 打开模型选择面板（本地命令）
+# Phase 64: 前端本地拦截——展开 SearchModelBar
+name: model
+slash_command: /model
+description: "切换 LLM 模型——展开模型选择面板"
+category: core
+local: true

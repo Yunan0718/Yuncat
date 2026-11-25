@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>Diag</title></head><body>
+<h2>Frontend API诊断</h2>
+<div id="results" style="font-family:monospace;font-size:12px;white-space:pre-wrap"></div>
+<script>
+const PORT = prompt("后端端口?", "1420");
+const TOKEN = prompt("Token?", "");
+const OUT = document.getElementById("results");
+function log(msg) { OUT.textContent += msg + '\n'; }
+
+async function test(path, name) {
+  try {
+    const res = await fetch(`http://127.0.0.1:${PORT}${path}`, {
+      headers: { Authorization: `Bearer ${TOKEN}` },
+    });
+    const data = await res.json();
+    const type = Array.isArray(data) ? 'array' : typeof data;
+    const len = Array.isArray(data) ? data.length : (typeof data === 'object' ? Object.keys(data).length : 'N/A');
+    log(`[OK] ${name}: ${type} (len=${len})`);
+  } catch(e) {
+    log(`[FAIL] ${name}: ${e.message}`);
+  }
+}
+
+async function run() {
+  log(`Backend: http://127.0.0.1:${PORT}`);
+  await test('/api/v1/models', 'models');
+  await test('/api/v1/agents', 'agents');
+  await test('/api/v1/sessions?limit=20', 'sessions');
+  await test('/api/v1/settings', 'settings');
+  await test('/api/v1/analytics/summary', 'analytics');
+  log('\nDONE - if all return array/object, backend is fine');
+}
+run();
+</script>
+</body></html>

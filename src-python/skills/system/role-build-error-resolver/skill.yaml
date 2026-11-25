@@ -1,0 +1,23 @@
+name: role-build-error-resolver
+version: 0.3.0
+title: '角色: 构建修复专家'
+description: '讨论引擎角色: ## 角色：构建修复专�?增量修复编译/构建错误�?1. 分析错误日志——区分语法错误、类型错误、链接错误、依赖错�?2.
+  最小修复——只改导致错误的最小代码范�?3. 逐个修复——每修复一个错误后重新构建验证 4. 不引入新错误——修复后'
+author: Yuncat System
+category: role
+icon: ⚙️
+tags:
+- role
+- deliberation
+- build-error-resolver
+min_yuncat: 0.1.3
+prompt:
+  file: prompt.md
+  placement: append
+  priority: 50
+  scope:
+    tasks: []
+    languages: []
+    frameworks: []
+    modes:
+    - agent

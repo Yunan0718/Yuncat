@@ -1,0 +1,10 @@
+# /coverage — 测试覆盖率提升
+name: coverage
+slash_command: /coverage
+description: "提升测试覆盖率——分析缺口→生成测试→验证"
+category: engineering
+workflow_template: coverage_boost
+arguments:
+  - name: target
+    type: string
+    description: "目标模块或文件（可选）"

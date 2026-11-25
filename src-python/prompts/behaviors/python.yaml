@@ -1,0 +1,79 @@
+# Python Behavior Prompts — Phase 27 (10 条)
+# Commander 渲染时根据项目语言自动加载
+
+python-coding-standards: |
+  ## Python 编码标准
+  - 遵循 PEP 8 规范
+  - 所有函数签名使用 type annotations
+  - 使用 dataclass(frozen=True) 或 NamedTuple 实现不可变数据
+  - 优先使用 context manager (with 语句) 管理资源
+  - 使用 logging 模块而非 print()
+
+python-error-handling: |
+  ## Python 错误处理
+  - 每一层显式处理错误——不要静默吞异常
+  - 捕获具体异常类型（except ValueError）而非裸 except
+  - 在边界处提供用户友好的错误消息
+  - 使用 try/finally 确保资源释放
+  - 自定义异常类继承自具体的内置异常类型
+
+python-testing: |
+  ## Python 测试规范
+  - 使用 pytest 框架
+  - 测试文件命名 test_*.py
+  - 使用 Arrange-Act-Assert 结构
+  - 标记测试类型: @pytest.mark.unit / @pytest.mark.integration / @pytest.mark.slow
+  - 测试覆盖率 ≥ 80%
+
+python-async: |
+  ## Python 异步编程
+  - 使用 async/await 编写异步代码
+  - aiohttp 用于 HTTP 客户端，aiosqlite 用于 SQLite
+  - asyncio.gather 并行执行独立协程
+  - asyncio.wait_for 设置超时防止永久等待
+  - 避免在协程中使用阻塞调用（用 run_in_executor）
+
+python-imports: |
+  ## Python 导入规范
+  - 标准库 → 第三方库 → 本地模块（分组排序）
+  - 使用绝对导入（from services.x import Y）而非相对导入
+  - 禁止循环导入——需要时用 TYPE_CHECKING
+  - 避免 import *——显式列出所有导入
+
+python-types: |
+  ## Python 类型约定
+  - 公开 API 函数必须有返回类型注解
+  - 使用 Optional[str] 或 str | None（Python 3.10+）
+  - 复杂类型使用 TypeAlias 或 Protocol 定义
+  - 使用 TypedDict 定义字典结构
+  - 避免在应用代码中使用 Any
+
+python-performance: |
+  ## Python 性能优化
+  - 大列表使用生成器（yield）而非一次返回
+  - 使用 collections.deque 做队列（O(1) popleft）
+  - 字符串拼接用 "".join() 而非循环 +=
+  - 缓存昂贵计算（functools.lru_cache）
+  - 大量数据遍历时优先用库函数（sum/map/filter）
+
+python-security: |
+  ## Python 安全规范
+  - 不硬编码密钥——使用环境变量或密钥管理器
+  - 使用 subprocess.run(shell=False, ...) 或 shlex.quote()
+  - SQL 查询使用参数化（? 占位符）——绝不用 f-string
+  - 文件路径使用 pathlib.Path 并验证是否在允许目录内
+  - 所有用户输入在使用前验证（schema 验证或手动检查）
+
+python-dependencies: |
+  ## Python 依赖管理
+  - requirements.txt 冻结具体版本
+  - 新增依赖前检查是否可用 stdlib 替代
+  - 优先使用纯 Python 包（无 C 扩展）以便跨平台
+  - 定期检查已知 CVE（pip-audit 或 safety）
+
+python-docstrings: |
+  ## Python 文档字符串
+  - 公开模块/类/函数必须有 docstring
+  - 使用 Google 风格 docstring
+  - 包含 Args/Returns/Raises 段（如有）
+  - docstring 描述"做什么"而非"怎么做"

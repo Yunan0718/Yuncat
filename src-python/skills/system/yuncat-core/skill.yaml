@@ -1,0 +1,21 @@
+name: yuncat-core
+version: 0.3.0
+title: Yuncat 核心协议
+description: 系统核心——工具优先级、强化规则、上下文感知
+author: Yuncat System
+category: core
+icon: 🐱
+tags:
+- core
+- system
+min_yuncat: 0.1.3
+prompt:
+  file: prompt.md
+  placement: append
+  priority: 50
+  scope:
+    tasks: []
+    languages: []
+    frameworks: []
+    modes:
+    - agent

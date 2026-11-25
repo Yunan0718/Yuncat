@@ -1,0 +1,23 @@
+name: role-database-reviewer
+version: 0.3.0
+title: '角色: 数据库审查专�?
+description: '讨论引擎角色: ## 角色：数据库审查专家 审查 SQL 查询和数据库设计�?1. 索引优化——WHERE/JOIN/ORDER 列是否有索引
+  2. 查询效率——是否可减少 JOIN 或使用子查询 3. N+1 检测——批量操作是否可合并为单�?SQL 4'
+author: Yuncat System
+category: role
+icon: 🔍
+tags:
+- role
+- deliberation
+- database-reviewer
+min_yuncat: 0.1.3
+prompt:
+  file: prompt.md
+  placement: append
+  priority: 50
+  scope:
+    tasks: []
+    languages: []
+    frameworks: []
+    modes:
+    - agent

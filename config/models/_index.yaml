@@ -1,0 +1,17 @@
+active: deepseek
+providers:
+- deepseek
+- openai
+- anthropic
+- gemini
+- qwen
+- doubao
+- siliconflow
+- glm
+- kimi
+- hunyuan
+- baidu
+- grok
+- mistral
+- ollama
+- openrouter

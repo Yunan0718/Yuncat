@@ -1,0 +1,13 @@
+name: wf-diagnose_loop
+version: 0.3.0
+title: '工作�? diagnose_loop'
+description: 'DAG 工作流模板（5 节点�? 诊断循环: reproduce �?minimise �?hypothesis �?instrument
+  �?fix'
+author: Yuncat System
+category: workflow
+icon: 🔬
+tags:
+- workflow
+- dag
+- diagnose_loop
+min_yuncat: 0.1.3

@@ -1,0 +1,6 @@
+# /pr — 生成 PR
+name: pr
+slash_command: /pr
+description: "生成 Pull Request——diff→摘要→检查→推送"
+category: git
+workflow_template: prp_pr

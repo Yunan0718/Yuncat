@@ -1,0 +1,7 @@
+# /plan — 进入计划模式，Agent 分析需求并生成执行计划
+name: plan
+slash_command: /plan
+description: "进入计划模式——Agent 分析需求并生成分步执行计划"
+category: core
+agent_routing:
+  mode: plan

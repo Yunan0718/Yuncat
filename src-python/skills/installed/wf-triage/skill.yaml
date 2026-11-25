@@ -1,0 +1,12 @@
+name: wf-triage
+version: 0.3.0
+title: '工作�? triage'
+description: 'DAG 工作流模板（4 节点�? Bug 分诊: triage �?assign �?fix �?verify'
+author: Yuncat System
+category: workflow
+icon: 🏥
+tags:
+- workflow
+- dag
+- triage
+min_yuncat: 0.1.3

@@ -1,0 +1,123 @@
+# ===== 构建产物 =====
+release/
+release2/
+build/
+src-frontend/dist/
+src-electron/out/
+src-electron/.electron-dist/
+*.exe
+*.zip
+*.asar
+
+# electron-builder 临时备份 / 下载归档
+src-electron/tmp-original-abl/
+src-electron/*.tgz
+
+# ===== 依赖 / 运行时 =====
+node_modules/
+src-python/python-embed/
+src-python/node-embed/
+__pycache__/
+*.pyc
+
+# ===== 内置 AI 模型（体积大，gitignore；打包时 extraResources 自动带入）=====
+# all-MiniLM-L6-v2 (88MB) / bge-reranker-v2-m3 (568MB) 等 embedding/rerank 模型
+src-python/embedding_models/
+
+# ===== 运行时数据（数据库 / 日志）=====
+*.db
+*.db-shm
+*.db-wal
+*.db-journal
+*.log
+
+# 本仓库根目录误创建的字面 "%APPDATA%" / "AppData" 目录（含真实用户数据，勿提交）
+%APPDATA%/
+AppData/
+
+# ===== 环境变量（安全：不硬编码密钥）=====
+.env
+.env.*
+
+# ===== 测试 / 覆盖率 / 静态检查产物 =====
+.coverage
+.pytest_cache/
+.ruff_cache/
+bandit_report.json
+test-results/
+playwright-report/
+e2e/screenshots/
+*_output.txt
+pytest*.txt
+pytest*.log
+eslint*.txt
+eslint*.json
+# 点开头的文件不匹配上面的 eslint*.json（gitignore 的 * 不跨越前导点）
+.eslint-report.json
+i18n-scan-*.json
+
+# ===== 备份 / 临时文件 =====
+*.bak
+*.tmp
+tmp-*.json
+tmp-*.js
+tmp-test-data/
+
+# SelfEvolution 测试运行时意外生成的 MagicMock 目录
+MagicMock/
+
+# 临时脚本（仅 _tmp_ 前缀；勿用 _*.py 以免误伤 __init__.py 等 _ 前缀模块）
+_tmp*.py
+_tmp*.txt
+_tmp*.bat
+debug_import.py
+test_path.py
+vite_test.html
+
+# 开发过程副产物（审查报告 / 临时清理与验证脚本）
+PROJECT_REVIEW_*.md
+cleanup-*.ps1
+verify-defender.ps1
+test_sqlite_vec.py
+test_vec_api.py
+
+# ===== IDE / 索引缓存 =====
+.vscode/
+.idea/
+.trae/
+.codegraph/
+.codex/
+
+# 本地工作区数据（WorkBuddy 记忆，非项目源码）
+.workbuddy/
+
+# 临时测试数据目录（端到端实测产生）
+_dev_test_data*/
+
+# ===== 嵌入的子仓库 =====
+.agents/skills/
+docs/FUSION_REVIEW_v4.24.md
+
+# ===== Python 打包产物 =====
+*.egg-info/
+
+# 打包期生成的运行时归档（python-core.7z / python-ml.7z，约 180MB）
+# 由 src-electron/scripts/prebuild.js 现场重建，不入版本管理：
+# prebuild 会先确认归档在场，缺失即重建，所以缓存不会导致漏打包。
+src-python/*.7z
+
+# prebuild 的增量缓存（记录上次归档 hash）。读不到时安全回退重建，
+# 与 *.7z 同性质：构建产物，不入版本管理。
+src-python/.prebuild-hash
+
+# 误创建的命令行残留文件（如 "t -- --run'"）
+"t -- --run'"
+
+# Vite 每次启动写的临时配置快照（不是产物，别提交）
+vitest.config.ts.timestamp-*.mjs
+
+# ===== 本机 AI 工具权限快照（每台机器不同，不入库）=====
+.claude/settings.local.json
+
+# ===== 自演化自动生成的技能（运行时写，每次生成新 dag_id）=====
+src-python/services/skills/auto/

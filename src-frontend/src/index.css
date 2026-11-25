@@ -1,0 +1,824 @@
+@import "tailwindcss";
+@config "../tailwind.config.ts";
+
+/* v4 dark mode — 等价 v3 的 darkMode: "class" */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* v4 主题扩展 —— 补齐 shadcn base-nova 所需的额外圆角档位 */
+@theme {
+  /*
+   * 3 档语义色块（2026-09-16）：页面底 / 区块 / 内嵌块。
+   * 值直接引用下面的主题变量（浅色 #FFFFFF / #F7F8FA / #F0F1F3，深色 #151517 / #1C1C22 / #232329），
+   * 所以这里只是给"层级"一个名字——组件里写 bg-surface-2，比写 bg-secondary 更容易看懂，
+   * 也不会再出现"同一层用三种不同类名"的情况。分层的目的是少画线：色差本身就分开了区域。
+   */
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+
+  --radius-4xl: 2rem;
+  --font-heading: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/*
+ * Yuncat Design System v4 — Linear / Vercel inspired.
+ * 简约、精致、禁得起盯。深色/浅色双主题。
+ */
+
+@layer base {
+  /* Phase UI: Tailwind v4 全局边框色重置 (shadcn 标准做法)。
+     否则裸 `border` / `border-t` / `border-b` / `border-l` / `border-r` 会退回 currentColor
+     (= 文字色, 浅色下≈ #0F1115 近黑), 表现为界面各处硬黑线。
+     统一回落到 --border (浅色 #E8E9EC / 暗色 #262629, 极淡), 对标 Codex/Claude 的克制观感。
+     类选择器 (border-input / border-destructive / border-ring 等) 优先级高于 *, 不受影响。 */
+  *, *::before, *::after {
+    border-color: var(--border);
+  }
+
+  :root {
+    /* ── 背景层级 ── */
+    --background: #FFFFFF;
+    --secondary: #F7F8FA;
+    --muted: #F0F1F3;
+  --surface-1: #FFFFFF;
+  --surface-2: #F0F1F5;
+  --surface-3: #E6E8EE;
+    --card: #FFFFFF;
+    --card-foreground: #0F1115;
+    --popover: #FFFFFF;
+    --popover-foreground: #0F1115;
+
+    /* ── 前景 ── */
+    /* Phase 108: 中性的蓝灰（对标 deepseek-harness 的 neutral-bluish grays）。
+       原 #6B6880 / #9995A8 带紫调，与品牌紫耦合；改为 slate 系中性蓝灰，
+       文本层级更干净、与任意主色都协调。 */
+    --foreground: #0F1115;
+    --foreground-secondary: #5B6066;
+    --foreground-tertiary: #9AA0AB;
+
+    /* ── 主色 (primary) ──
+       对标 deepseek-harness：主操作按钮用近黑/近白胶囊（中性、专业）；
+       蓝色仅用于发送/链接/聚焦等强调动作（--accent）。 */
+    --primary: #151517;
+    --primary-foreground: #FFFFFF;
+    --primary-hover: #2E2F33;
+
+    /* ── 强调蓝（对标 dsh 的 deepseek-500 #4176E6）── */
+    --accent: #4176E6;
+    --accent-hover: #679EFE;
+    --accent-foreground: #FFFFFF;
+
+    /* ── 语义色 ── */
+    /* 2026-09-15 对比度审计：原值作「文本色」压在白底上只有 3.02/2.51/4.00:1（低于 AA 4.5），
+       白字压在它们上面同样是这个比值（对比度对称）→ 一并调深到达标。
+       -solid 变体用于**实心填充**（见下方 .dark 的说明）。 */
+    --success: #188748;          /* 4.57:1 vs #FFF */
+    --success-foreground: #FFFFFF;
+    --success-solid: #188748;
+    --warning: #A06A08;          /* 4.61:1 vs #FFF */
+    --warning-foreground: #FFFFFF;
+    --warning-solid: #A06A08;
+    --destructive: #CF222E;      /* 4.87:1 vs #FFF */
+    --destructive-foreground: #FFFFFF;
+    --destructive-solid: #CF222E;
+
+    /* ── 边框 ── */
+    --border: #E8E9EC;
+    --border-hover: #DCDCE2;
+    /* 2026-09-15：1.21:1 时输入框边界几乎不可见（WCAG 1.4.11 需 3:1，但那需要
+       接近 #767676 的重灰，与"简洁大气"矛盾）——折中到 ~1.86:1，可辨识而不重。 */
+    --input: #BBBEC3;
+    --ring: #4176E6;
+
+    /* ── 阴影（更轻、更克制——依赖 1px 边框而非重阴影，对标参考设计的极简观感） ── */
+    --shadow-xs: 0 1px 1px rgba(0,0,0,0.02);
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.03);
+    --shadow-md: 0 2px 6px rgba(0,0,0,0.05);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.06);
+
+    /* ── 圆角 ── */
+    --radius: 12px;
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    /* ── 层级（z-index）─────────────────────────────────────────
+     2026-09-15 审计：此前是散落的魔法值（z-50×34 / z-[60] / z-[100] / z-[200] /
+     z-[999] / CSS 里 9999），没有约定 → 谁盖住谁靠 DOM 顺序决定，实测
+     **Toast(z-50) 会被模态(z-50/60/100) 盖住**（保存成功的提示看不见）。
+     这里收敛成命名层级，只能按语义取值，不再写数字。
+     只登记**实际有用例**的层，不留空占位（避免又出现死 token）。 */
+  --z-backdrop: 90;      /* 透明点击遮罩（点击外部关闭），须低于其弹层 */
+  --z-dropdown: 100;     /* 锚定弹出层：tooltip/dropdown/select/建议菜单 */
+  --z-drawer: 300;       /* 侧抽屉：DetailDrawer / Sheet */
+  --z-modal: 400;        /* 模态对话框 */
+  --z-modal-top: 450;    /* 更高优先级模态：崩溃恢复、命令面板 */
+  --z-ctx: 500;          /* 右键菜单（须能盖住模态） */
+  --z-toast: 600;        /* 通知（必须永远可见） */
+  --z-skip: 700;         /* 跳转链接（键盘可达性，最高） */
+
+  --radius-full: 9999px;
+
+    /* Phase 68: 间距 token——与 Tailwind 默认 spacing scale 对齐，供面板/卡片统一间距 */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 12px;
+    --spacing-lg: 16px;
+    --spacing-xl: 24px;
+
+    /* Phase 68: 面板内边距——跟随 density 切换（见 [data-density] 块） */
+    --panel-padding: var(--spacing-lg);
+
+    /* Phase 68: 更细的分割线——比 --border 更淡，用于卡片内部分隔 */
+    --border-subtle: #F0F0F2;
+
+    /* ── 图表色板 (8 色 Token 化) ── */
+    --chart-1: #5B63D3;
+    --chart-2: #38B2AC;
+    --chart-3: #ED8936;
+    --chart-4: #9F7AEA;
+    --chart-5: #E53E3E;
+    --chart-6: #3B82F6;
+    --chart-7: #1EAA5B;
+    --chart-8: #EC4899;
+
+    /* ── 实体高亮色（Phase 49-H: 精简到 5 色——file/url/agent/workflow + symbol 统一） ── */
+    --entity-file: #60a5fa;
+    --entity-url: #34d399;
+    --entity-agent: #c084fc;
+    --entity-workflow: #22d3ee;
+    --entity-symbol: #818cf8;
+
+    /* ── Sidebar ── */
+    --sidebar: #F7F8FA;
+    --sidebar-foreground: #0F1115;
+    --sidebar-primary: #4176E6;
+    --sidebar-primary-foreground: #FFFFFF;
+    --sidebar-accent: #EDEFF2;
+    --sidebar-accent-foreground: #0F1115;
+    --sidebar-border: #E8E9EC;
+    --sidebar-ring: #4176E6;
+
+    /* ── 品牌渐变 ── */
+    --brand-from: #4176E6;
+    --brand-to: #679EFE;
+    --brand-shadow: #4176E620;
+
+    /* Phase 49-F: mobile base font size */
+    --mobile-base-size: 14px;
+
+    /* ── Diff 语法高亮 ── */
+    --diff-add: #1A7F37;
+    --diff-del: #D1242F;
+    --diff-hunk: #0550AE;
+    --diff-meta: #6E7781;
+
+    /* ── 补齐未定义 Token（修复选中态/focus ring/分隔线静默失效） ── */
+    --primary-muted: color-mix(in srgb, var(--primary) 8%, transparent);
+    --primary-soft: color-mix(in srgb, var(--primary) 12%, transparent);
+    --accent: #F0F0F2;
+    --accent-foreground: #17161A;
+    --border-default: var(--border);
+    --badge: var(--secondary);
+    --badge-foreground: var(--foreground);
+    --badge-warning: var(--warning);
+    --badge-warning-foreground: var(--warning-foreground);
+    --badge-danger: var(--destructive);
+    --badge-danger-foreground: var(--destructive-foreground);
+    --ring-bg-primary: var(--primary);
+  }
+
+  .dark {
+    /* ── 背景层级 ── */
+    /* 主流做法（Material Design #121212 / GitHub #0D1117）：
+       近黑而非纯黑，减少 halation（文字光晕）与明暗骤变带来的刺眼感。 */
+    --background: #151517;
+    --secondary: #1C1C22;
+    --muted: #232329;
+  --surface-1: #1C1D22;
+  --surface-2: #131417;
+  --surface-3: #292A32;
+    --card: #202027;
+    --card-foreground: #F4F4F5;
+    --popover: #232329;
+    --popover-foreground: #F4F4F5;
+
+    /* ── 前景 ── */
+    /* Phase 108: 暗色下同样用中性蓝灰（slate 系），去掉原紫调。 */
+    --foreground: #F4F4F5;
+    --foreground-secondary: #9CA2AC;
+    --foreground-tertiary: #6B7280;
+
+    /* ── 主色 ── */
+    /* 暗色下主操作按钮用近白填充 + 深色字（对标 dsh 暗色 primary）。 */
+    --primary: #F4F4F5;
+    --primary-foreground: #151517;
+    --primary-hover: #E2E3E6;
+
+    /* ── 语义色 ── */
+    /* 同样降饱和：成功/警告/错误在暗色下用「柔和」版本，不用高亮荧光色。
+       2026-09-15 对比度审计：暗色下两种用法对亮度的要求**方向相反**——
+       · 作文本色压暗底 → 要够亮（现值 5.97/7.11/4.89:1 ✓）
+       · 作实心填充配白字 → 要够暗（原值仅 3.05/2.56/3.73:1 ✗，白字几乎看不清）
+       一个 token 无法同时满足，故拆出 -solid（与浅色同值：白字对比度与主题无关）。 */
+    --success: #3FA57A;
+    --success-foreground: #FFFFFF;
+    --success-solid: #188748;
+    --warning: #C99A45;
+    --warning-foreground: #FFFFFF;
+    --warning-solid: #A06A08;
+    --destructive: #C7686E;
+    --destructive-foreground: #FFFFFF;
+    --destructive-solid: #CF222E;
+
+    /* ── 边框 ── */
+    /* 主流做法（VS Code/Linear）：暗色主题下 border 应极淡，避免"白线杂乱" */
+    --border: #262629;
+    --border-hover: #34343A;
+    /* 同上：折中 ~1.81:1（主流暗色主题的输入框边界普遍在 1.3–2:1 区间） */
+    --input: #41414A;
+    --ring: #679EFE;
+
+    /* Phase 68: 深色主题的细分隔线——更淡，仅用于卡片内部分隔 */
+    --border-subtle: #1C1E24;
+
+    /* ── 阴影 ── */
+    --shadow-xs: 0 1px 2px rgba(0,0,0,0.4);
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.5);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.6);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.7);
+
+    /* ── 实体高亮色（Phase 49-H: 精简到 5 色） ── */
+    /* 降饱和的柔和版本——用于暗背景上的可点击 token，不再用高亮荧光色 */
+    --entity-file: #8FAFDB;
+    --entity-url: #7CC5A6;
+    --entity-agent: #C0A8DC;
+    --entity-workflow: #74BFD6;
+    --entity-symbol: #9DA8E0;
+    --chart-1: #7C83C7;
+    --chart-2: #5FA8A0;
+    --chart-3: #C99A5B;
+    --chart-4: #9A84D6;
+    --chart-5: #C77C82;
+    --chart-6: #6E93C7;
+    --chart-7: #3FA57A;
+    --chart-8: #C786A6;
+
+    /* ── Sidebar ── */
+    --sidebar: #171719;
+    --sidebar-foreground: #F4F4F5;
+    --sidebar-primary: #679EFE;
+    --sidebar-primary-foreground: #151517;
+    --sidebar-accent: #232325;
+    --sidebar-accent-foreground: #F4F4F5;
+    --sidebar-border: #262629;
+    --sidebar-ring: #679EFE;
+
+    /* ── 品牌渐变 ── */
+    --brand-from: #679EFE;
+    --brand-to: #4176E6;
+    --brand-shadow: #679EFE20;
+
+    /* ── Diff 语法高亮 ── */
+    --diff-add: #6FBF8E;
+    --diff-del: #D97B80;
+    --diff-hunk: #7FA6D6;
+    --diff-meta: #8B909B;
+
+    /* ── 补齐未定义 Token（深色主题对应值） ── */
+    --primary-muted: color-mix(in srgb, var(--primary) 15%, transparent);
+    --primary-soft: color-mix(in srgb, var(--primary) 20%, transparent);
+    --accent: #1D1F25;
+    --accent-foreground: #E7E8EC;
+    --border-default: var(--border);
+    --badge: var(--secondary);
+    --badge-foreground: var(--foreground);
+    --badge-warning: var(--warning);
+    --badge-warning-foreground: var(--warning-foreground);
+    --badge-danger: var(--destructive);
+    --badge-danger-foreground: var(--destructive-foreground);
+    --ring-bg-primary: var(--primary);
+  }
+
+  /* Phase 49-G: accent color themes */
+  .theme-blue {
+    --accent: #4176E6;
+    --accent-hover: #679EFE;
+    --ring: #4176E6;
+    --sidebar-primary: #4176E6;
+    --sidebar-ring: #4176E6;
+    --brand-from: #4176E6;
+    --brand-to: #679EFE;
+    --brand-shadow: #4176E620;
+  }
+  .dark.theme-blue {
+    --accent: #679EFE;
+    --accent-hover: #4176E6;
+    --ring: #679EFE;
+    --sidebar-primary: #679EFE;
+    --sidebar-ring: #679EFE;
+    --brand-from: #679EFE;
+    --brand-to: #4176E6;
+    --brand-shadow: #679EFE20;
+  }
+
+  .theme-green {
+    --accent: #1EAA5B;
+    --accent-hover: #34D399;
+    --ring: #1EAA5B;
+    --sidebar-primary: #1EAA5B;
+    --sidebar-ring: #1EAA5B;
+    --brand-from: #1EAA5B;
+    --brand-to: #34D399;
+    --brand-shadow: #1EAA5B20;
+  }
+  .dark.theme-green {
+    /* 暗色下绿色降饱和——#34D399 (hsl 160 84%) 荧光感过强，改为柔和墨绿 */
+    --accent: #4FA37E;
+    --accent-hover: #5FB28D;
+    --ring: #4FA37E;
+    --sidebar-primary: #4FA37E;
+    --sidebar-ring: #4FA37E;
+    --brand-from: #4FA37E;
+    --brand-to: #6BB897;
+    --brand-shadow: #4FA37E20;
+  }
+
+  .theme-purple {
+    --accent: #9F7AEA;
+    --accent-hover: #B794F6;
+    --ring: #9F7AEA;
+    --sidebar-primary: #9F7AEA;
+    --sidebar-ring: #9F7AEA;
+    --brand-from: #9F7AEA;
+    --brand-to: #B794F6;
+    --brand-shadow: #9F7AEA20;
+  }
+  .dark.theme-purple {
+    --accent: #9A85C7;
+    --accent-hover: #A996D4;
+    --ring: #9A85C7;
+    --sidebar-primary: #9A85C7;
+    --sidebar-ring: #9A85C7;
+    --brand-from: #9A85C7;
+    --brand-to: #B5A3DA;
+    --brand-shadow: #9A85C720;
+  }
+
+  .theme-orange {
+    --accent: #ED8936;
+    --accent-hover: #F6AD55;
+    --ring: #ED8936;
+    --sidebar-primary: #ED8936;
+    --sidebar-ring: #ED8936;
+    --brand-from: #ED8936;
+    --brand-to: #F6AD55;
+    --brand-shadow: #ED893620;
+  }
+  .dark.theme-orange {
+    --accent: #C08A55;
+    --accent-hover: #CE9A64;
+    --ring: #C08A55;
+    --sidebar-primary: #C08A55;
+    --sidebar-ring: #C08A55;
+    --brand-from: #C08A55;
+    --brand-to: #D4A974;
+    --brand-shadow: #C08A5520;
+  }
+
+  /* Scrollbar — ultra-thin, Vercel style */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  /* Phase 108: 悬停态平滑过渡（近似 dsh 的 scrollbar linger，离开后渐隐） */
+  ::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 2px; transition: background-color 0.3s ease; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--foreground-tertiary); }
+  ::selection { background: color-mix(in srgb, var(--primary) 10%, transparent); }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", "PingFang SC", sans-serif;
+    font-size: var(--ui-font-size, 14px);  /* Phase 49-G: 跟随用户设置 */
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    min-width: 0;
+  }
+
+  /* Phase 49-G: density spacing tokens */
+  :root {
+    --density-space: 1rem;
+    --density-pad: 1rem;
+    --density-gap: 0.75rem;
+  }
+  [data-density="compact"] {
+    --density-space: 0.5rem;
+    --density-pad: 0.5rem;
+    --density-gap: 0.375rem;
+    /* Phase 68: 面板内边距跟随 density 缩小 */
+    --panel-padding: var(--spacing-md);
+  }
+  [data-density="comfortable"] {
+    --density-space: 1rem;
+    --density-pad: 1rem;
+    --density-gap: 0.75rem;
+    --panel-padding: var(--spacing-lg);
+  }
+
+  /* P1 (2026-07-04): density 变量消费者——让 data-density 切换真正生效。
+     旧实现定义了 --panel-padding / --density-gap / --density-pad 但无人消费，
+     用户在设置切换 compact/spacious 视觉无变化。现在应用到主内容区 + 卡片 + 列表 gap。
+     对标 VS Code: compact 模式缩小 padding 增加信息密度，spacious 模式增加留白。 */
+  [data-density="compact"] .card,
+  [data-density="compact"] [class*="rounded-xl border"]:not([role="dialog"]):not([role="alertdialog"]) {
+    padding: var(--density-pad);
+  }
+  [data-density="compact"] .grid.gap-4,
+  [data-density="compact"] .space-y-6 {
+    gap: var(--density-gap);
+  }
+
+  /* 主内容区 padding 跟随 density——对标 macOS Settings / VS Code Settings */
+  [data-density="compact"] main,
+  [data-density="compact"] .max-w-5xl,
+  [data-density="compact"] .max-w-4xl,
+  [data-density="compact"] .page-shell {
+    padding-left: var(--density-pad);
+    padding-right: var(--density-pad);
+  }
+
+  /* Smooth page transitions */
+  .animate-fade-in { animation: fade-in 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
+  @keyframes fade-in { from { opacity: 0; transform: translateY(2px); } to { opacity: 1; transform: translateY(0); } }
+  .animate-slide-up { animation: slide-up 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+  @keyframes slide-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .animate-toast-exit { animation: toast-exit 140ms ease-in forwards; }
+  @keyframes toast-exit { to { opacity: 0; transform: translateY(4px) scale(0.98); } }
+
+  /* Phase 9-X: 排版统一——标题统一紧排 + 字重层级，正文行高一致（对标 DSH 克制排版）。
+     消除各页面标题字距/字重不一致导致的"观感乱"。 */
+  h1, h2, h3, h4, h5, h6 { letter-spacing: -0.01em; color: var(--foreground); }
+  h1 { font-weight: 700; font-size: 1.5rem; line-height: 1.25; }
+  h2 { font-weight: 600; font-size: 1.2rem; line-height: 1.3; }
+  h3 { font-weight: 600; font-size: 1.05rem; line-height: 1.35; }
+  h4 { font-weight: 600; font-size: 0.95rem; line-height: 1.4; }
+  /* 次级说明文字统一走中性灰（避免各页混用不同灰度的 muted 文案） */
+  .text-secondary-uniform { color: var(--foreground-secondary); }
+
+  /* Phase 9-X: 统一的页面内容容器——各子页面复用，保证间距/最大宽度一致。
+     用法：<div className="page-shell"> ... </div> */
+  .page-shell { width: 100%; max-width: 64rem; margin-inline: auto; padding: 2rem; }
+  @media (max-width: 640px) { .page-shell { padding: 1rem; } }
+}
+
+  /* Electron 无框窗口 — 标题栏可拖拽 */
+  .app-drag { -webkit-app-region: drag; }
+  .app-drag button, .app-drag select, .app-drag input { -webkit-app-region: no-drag; }
+  .app-no-drag { -webkit-app-region: no-drag; }
+
+  /* Focus ring — clean */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 1px;
+    border-radius: var(--radius-sm);
+  }
+
+/* ---- Animations ---- */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Phase 108: 运行态扫光——对标 deepseek-harness 的 sweep（而非 spinner）。
+   用 color-mix 取主色做渐变移动条；prefers-reduced-motion 由全局规则降级为静态。 */
+@keyframes dsh-sweep {
+  0% { background-position: -150% 0; }
+  100% { background-position: 250% 0; }
+}
+.running-sweep {
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--primary) 38%, transparent) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  animation: dsh-sweep 1.4s ease-in-out infinite;
+}
+
+/* Phase 40 / Phase 56-C2: 消息入场动效更克制（Claude Code 风格：短距离、短时长） */
+@keyframes messageIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.message-enter {
+  animation: messageIn 0.15s ease-out both;
+}
+
+/* Phase 40 / Phase 56-C2: 卡片 hover 微动效更克制 */
+.card-hover {
+  transition: transform 120ms ease-out, box-shadow 120ms ease-out;
+}
+.card-hover:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Phase 40: Skeleton → 内容 cross-fade */
+.skeleton-enter {
+  animation: fadeIn 0.2s ease-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 终端面板从底部滑入——对标 VSCode 集成终端打开动效 */
+@keyframes terminal-enter {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-terminal-enter {
+  animation: terminal-enter 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ---- Utilities ---- */
+.skeleton {
+  background: linear-gradient(90deg, var(--secondary) 25%, var(--muted) 50%, var(--secondary) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius-sm);
+}
+.spinner {
+  width: 16px; height: 16px;
+  border: 2px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  display: inline-block;
+  vertical-align: -3px;
+}
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out;
+}
+
+/* 模态弹窗进入动效（2026-10-08）：审批这类"要用户做决定"的框此前直接硬闪出现，
+   而项目里连 toast、右键菜单都有动效，反差明显。遮罩淡入 + 内容轻微放大上浮，
+   与 VSCode / macOS 模态一致；退出不做动效（关闭要立刻响应，避免点击延迟感）。 */
+@keyframes modal-overlay-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes modal-content-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-modal-overlay {
+  animation: modal-overlay-in 0.16s ease-out;
+}
+.animate-modal-content {
+  animation: modal-content-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-modal-overlay,
+  .animate-modal-content {
+    animation-duration: 0.01ms;
+  }
+}
+
+/* 右侧抽屉滑入（2026-10-08）：通知/详情抽屉此前无动效，开合生硬 */
+@keyframes drawer-in {
+  from { opacity: 0.6; transform: translateX(16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.animate-drawer-in {
+  animation: drawer-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-drawer-in { animation-duration: 0.01ms; }
+}
+
+/* ---- Form elements ---- */
+input[type="text"],
+input[type="password"],
+input[type="search"],
+textarea,
+select {
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+input:focus, textarea:focus, select:focus {
+  border-color: var(--ring);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 12%, transparent);
+  outline: none;
+}
+
+/* ---- Buttons / Badges / Cards — 统一使用 shadcn/ui 组件，不再维护并行 CSS class ---- */
+
+/* ---- Markdown ---- */
+.markdown-body {}
+.markdown-body h1 { font-size: 1.15rem; font-weight: 700; margin: 1rem 0 0.5rem; letter-spacing: -0.01em; }
+.markdown-body h2 { font-size: 1.05rem; font-weight: 600; margin: 0.75rem 0 0.4rem; }
+.markdown-body h3 { font-size: 0.95rem; font-weight: 600; margin: 0.5rem 0 0.25rem; }
+.markdown-body p { margin: 0.3rem 0; line-height: 1.7; }
+.markdown-body ul, .markdown-body ol { margin: 0.3rem 0; padding-left: 1.4rem; }
+.markdown-body li { margin: 0.15rem 0; }
+.markdown-body blockquote {
+  border-left: 2px solid var(--primary);
+  background: color-mix(in srgb, var(--primary) 6%, transparent);
+  padding: 0.4rem 0.7rem; margin: 0.5rem 0;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  color: var(--foreground-secondary);
+}
+.markdown-body code:not(pre code) {
+  background: var(--muted); color: var(--foreground);
+  padding: 0.1rem 0.3rem; border-radius: 3px;
+  font-size: 0.84em; font-family: "JetBrains Mono", "Cascadia Code", Consolas, monospace;
+}
+.markdown-body pre {
+  background: var(--secondary); border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md); padding: 0.75rem;
+  overflow-x: auto; margin: 0.5rem 0; font-size: 0.83em;
+}
+.markdown-body pre code { background: none; padding: 0; font-family: "JetBrains Mono", "Cascadia Code", Consolas, monospace; }
+
+/* 代码高亮 token 配色——浅色(github) / 深色(github-dark)，随主题切换，避免浅色模式 token 不可读 */
+.hljs { color: #24292e; background: transparent; }
+.hljs-doctag, .hljs-keyword, .hljs-meta .hljs-keyword, .hljs-template-tag, .hljs-template-variable, .hljs-type, .hljs-variable.language_ { color: #d73a49; }
+.hljs-title, .hljs-title.class_, .hljs-title.class_.inherited__, .hljs-title.function_ { color: #6f42c1; }
+.hljs-attr, .hljs-attribute, .hljs-literal, .hljs-meta, .hljs-number, .hljs-operator, .hljs-variable, .hljs-selector-attr, .hljs-selector-class, .hljs-selector-id { color: #005cc5; }
+.hljs-regexp, .hljs-string, .hljs-meta .hljs-string { color: #032f62; }
+.hljs-built_in, .hljs-symbol { color: #e36209; }
+.hljs-comment, .hljs-code, .hljs-formula { color: #6a737d; }
+.hljs-name, .hljs-quote, .hljs-selector-tag, .hljs-selector-pseudo { color: #22863a; }
+.hljs-subst { color: #24292e; }
+.hljs-section { color: #005cc5; font-weight: 600; }
+.hljs-bullet { color: #735c0f; }
+.hljs-emphasis { color: #24292e; font-style: italic; }
+.hljs-strong { color: #24292e; font-weight: 600; }
+.hljs-addition { color: #22863a; }
+.hljs-deletion { color: #b31d28; }
+.dark .hljs { color: #c9d1d9; background: transparent; }
+.dark .hljs-doctag, .dark .hljs-keyword, .dark .hljs-meta .hljs-keyword, .dark .hljs-template-tag, .dark .hljs-template-variable, .dark .hljs-type, .dark .hljs-variable.language_ { color: #ff7b72; }
+.dark .hljs-title, .dark .hljs-title.class_, .dark .hljs-title.class_.inherited__, .dark .hljs-title.function_ { color: #d2a8ff; }
+.dark .hljs-attr, .dark .hljs-attr, .dark .hljs-attribute, .dark .hljs-literal, .dark .hljs-meta, .dark .hljs-number, .dark .hljs-operator, .dark .hljs-variable, .dark .hljs-selector-attr, .dark .hljs-selector-class, .dark .hljs-selector-id { color: #79c0ff; }
+.dark .hljs-regexp, .dark .hljs-string, .dark .hljs-meta .hljs-string { color: #a5d6ff; }
+.dark .hljs-built_in, .dark .hljs-symbol { color: #ffa657; }
+.dark .hljs-comment, .dark .hljs-code, .dark .hljs-formula { color: #8b949e; }
+.dark .hljs-name, .dark .hljs-quote, .dark .hljs-selector-tag, .dark .hljs-selector-pseudo { color: #7ee787; }
+.dark .hljs-subst { color: #c9d1d9; }
+.dark .hljs-section { color: #1f6feb; font-weight: 600; }
+.dark .hljs-bullet { color: #f2cc60; }
+.dark .hljs-emphasis { color: #c9d1d9; font-style: italic; }
+.dark .hljs-strong { color: #c9d1d9; font-weight: 600; }
+.dark .hljs-addition { color: #7ee787; }
+.dark .hljs-deletion { color: #ffa198; }
+
+/* Global monospace */
+code, pre, textarea, .font-mono { font-family: "JetBrains Mono", "Cascadia Code", Consolas, monospace !important; }
+.markdown-body a { color: var(--accent); text-decoration: none; }
+.markdown-body a:hover { text-decoration: underline; }
+
+/* Entity highlighting — Claude Code / Cursor style clickable tokens */
+.entity-file { color: var(--entity-file); background: color-mix(in srgb, var(--entity-file) 10%, transparent); border-radius: 3px; padding: 0 3px; cursor: pointer; font-family: "JetBrains Mono", "Cascadia Code", Consolas, monospace; font-size: 0.90em; }
+.entity-file:hover { background: color-mix(in srgb, var(--entity-file) 22%, transparent); }
+.entity-url { color: var(--entity-url); background: color-mix(in srgb, var(--entity-url) 10%, transparent); border-radius: 3px; padding: 0 3px; cursor: pointer; }
+.entity-url:hover { background: color-mix(in srgb, var(--entity-url) 22%, transparent); text-decoration: underline; }
+.entity-agent { color: var(--entity-agent); background: color-mix(in srgb, var(--entity-agent) 10%, transparent); border-radius: 3px; padding: 0 3px; cursor: pointer; }
+.entity-agent:hover { background: color-mix(in srgb, var(--entity-agent) 22%, transparent); }
+.entity-workflow { color: var(--entity-workflow); background: color-mix(in srgb, var(--entity-workflow) 10%, transparent); border-radius: 3px; padding: 0 3px; cursor: pointer; }
+.entity-workflow:hover { background: color-mix(in srgb, var(--entity-workflow) 22%, transparent); }
+.entity-symbol_class, .entity-symbol_func, .entity-symbol_const, .entity-symbol_import { color: var(--entity-symbol); background: color-mix(in srgb, var(--entity-symbol) 8%, transparent); border-radius: 2px; padding: 0 2px; cursor: pointer; font-family: "JetBrains Mono", "Cascadia Code", Consolas, monospace; }
+.entity-symbol_class:hover, .entity-symbol_func:hover, .entity-symbol_const:hover, .entity-symbol_import:hover { background: color-mix(in srgb, var(--entity-symbol) 18%, transparent); }
+
+/* Message sequence badge */
+.msg-seq { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 18px; border-radius: 4px; font-size: 10px; font-weight: 600; font-family: "JetBrains Mono", "Cascadia Code", Consolas, monospace; user-select: none; }
+.msg-seq-user { background: color-mix(in srgb, var(--primary) 10%, transparent); color: var(--primary); }
+.msg-seq-assistant { background: var(--muted); color: var(--foreground-tertiary); }
+.msg-seq-system { background: color-mix(in srgb, var(--warning) 8%, transparent); color: var(--warning); }
+
+/* Context ring */
+.context-ring { position: relative; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; border-radius: 6px; background: var(--secondary); border: 1px solid var(--border-subtle); cursor: pointer; transition: border-color 0.2s; }
+.context-ring:hover { border-color: var(--primary); }
+.context-ring svg { transition: stroke-dashoffset 0.5s ease; }
+.context-ring.warning svg circle:last-child { stroke: var(--warning); }
+.context-ring.danger svg circle:last-child { stroke: var(--destructive); }
+.context-ring.critical svg circle:last-child { stroke: var(--destructive); }
+
+/* Right-click context menu */
+.ctx-menu { position: fixed; background: var(--card); border: 1px solid var(--border-subtle); border-radius: 8px; box-shadow: var(--shadow-lg); padding: 4px; z-index: var(--z-ctx); min-width: 180px; animation: fade-in 0.12s ease-out; }
+.ctx-menu-item { display: flex; align-items: center; gap: 8px; width: 100%; padding: 6px 10px; font-size: 12px; border-radius: 5px; text-align: left; color: var(--foreground); transition: background 0.1s; }
+.ctx-menu-item:hover { background: var(--secondary); }
+.ctx-menu-item .shortcut { margin-left: auto; color: var(--foreground-tertiary); font-size: 10px; }
+.ctx-menu-sep { height: 1px; background: var(--border-subtle); margin: 3px 0; }
+.markdown-body .table-wrapper { overflow-x: auto; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); margin: 0.5rem 0; }
+.markdown-body table { width: 100%; border-collapse: collapse; font-size: 0.82em; }
+.markdown-body th, .markdown-body td { border-bottom: 1px solid var(--border-subtle); border-right: 1px solid var(--border-subtle); padding: 0.35rem 0.65rem; text-align: left; }
+.markdown-body th:last-child, .markdown-body td:last-child { border-right: none; }
+.markdown-body tbody tr:last-child td { border-bottom: none; }
+.markdown-body th { background: var(--secondary); font-weight: 600; color: var(--foreground); }
+.markdown-body tbody tr:nth-child(even) { background: color-mix(in srgb, var(--secondary) 40%, transparent); }
+.markdown-body tbody tr:hover { background: color-mix(in srgb, var(--secondary) 70%, transparent); }
+.markdown-body hr { border: none; border-top: 1px solid var(--border-subtle); margin: 0.75rem 0; }
+.markdown-body img { max-width: 100%; border-radius: var(--radius-md); }
+
+/* Diff / Code block — 跟随主题变量 */
+.diff-block { background: var(--secondary); color: var(--foreground-secondary); border: 1px solid var(--border-subtle); }
+.diff-block-header { background: var(--muted); border-bottom: 1px solid var(--border-subtle); }
+.diff-add { color: var(--success); }
+.diff-del { color: var(--destructive); }
+.diff-hunk { color: var(--primary); }
+
+.diff-meta { color: var(--foreground-tertiary); }
+
+/* ---- ReactFlow (工作流编辑器) 暗色适配 ----
+   节点已用 CSS 变量（graphUtils.ts），此处适配 xyflow 自带控件：
+   背景点阵 / 缩放控件 / 小地图 / 节点默认文字，暗色下用柔和色不刺眼。 */
+.dark .react-flow__background {
+  background-color: var(--background);
+}
+.dark .react-flow__controls {
+  box-shadow: var(--shadow-sm);
+}
+.dark .react-flow__controls-button {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  fill: var(--foreground-secondary);
+}
+.dark .react-flow__controls-button:hover {
+  background: var(--secondary);
+}
+.dark .react-flow__minimap {
+  background: var(--secondary);
+  border: 1px solid var(--border);
+}
+.dark .react-flow__node-default {
+  color: var(--foreground);
+  background: var(--card);
+}
+.dark .react-flow__edge-path {
+  stroke: var(--foreground-tertiary);
+}
+.dark .react-flow__handle {
+  background: var(--foreground-secondary);
+  border-color: var(--background);
+}
+.dark .react-flow__attribution {
+  background: transparent;
+  color: var(--foreground-tertiary);
+}
+
+/* 可访问性：尊重用户的动效偏好设置 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Task 6.13: 高对比度模式 —— 跟随 OS prefers-contrast 偏好 */
+@media (prefers-contrast: more) {
+  :root {
+    --border: #000000;
+    --border-hover: #000000;
+    --input: #000000;
+    --ring: #0000FF;
+    --primary: #0000EE;
+    --primary-foreground: #FFFFFF;
+    --success: #008000;
+    --warning: #8B4500;
+    --destructive: #CC0000;
+  }
+  .dark {
+    --border: #FFFFFF;
+    --border-hover: #FFFFFF;
+    --input: #FFFFFF;
+    --ring: #FFFF00;
+    --primary: #FFFF00;
+    --primary-foreground: #000000;
+    --success: #00FF00;
+    --warning: #FFD700;
+    --destructive: #FF4444;
+  }
+  :focus-visible {
+    outline-width: 3px;
+    outline-offset: 2px;
+  }
+  /* 避免半透明遮罩降低可读性 */
+  .bg-black\/30,
+  .bg-black\/40,
+  .bg-black\/10 {
+    background-color: rgba(0, 0, 0, 0.85) !important;
+  }
+  .text-muted-foreground {
+    color: var(--foreground) !important;
+  }
+}

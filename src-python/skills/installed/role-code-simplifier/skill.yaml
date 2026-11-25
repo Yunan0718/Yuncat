@@ -1,0 +1,23 @@
+name: role-code-simplifier
+version: 0.3.0
+title: '角色: 代码简化专�?
+description: '讨论引擎角色: ## 角色：代码简化专�?简化代码同时保持行为不变： 1. 消除冗余——不必要的中间变量、重复的条件判断 2. 使用语言特性——Python:
+  comprehension/list slicing, TS: optional chainin'
+author: Yuncat System
+category: role
+icon: ⚙️
+tags:
+- role
+- deliberation
+- code-simplifier
+min_yuncat: 0.1.3
+prompt:
+  file: prompt.md
+  placement: append
+  priority: 50
+  scope:
+    tasks: []
+    languages: []
+    frameworks: []
+    modes:
+    - agent

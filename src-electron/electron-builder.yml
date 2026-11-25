@@ -1,0 +1,101 @@
+appId: com.yuncat.app
+productName: Yuncat
+copyright: Yuncat
+directories:
+  output: ../release2
+
+files:
+  # 只列出主进程真正会 require / loadFile 的文件。
+  # 加新模块时必须同步这里——打包后缺文件不会在开发期报错，只会在用户机器上启动失败，
+  # 守卫见 tests/electron/main-process-guards.test.mjs（会递归扫 require/loadFile 并比对）。
+  - main.js
+  - preload.js
+  - crash-handler.js
+  - windows.js
+  - runtime-bootstrap.js
+  - auth-recovery.js
+  - browser.js
+  - startup-browser.js
+  - browser-cdp.js
+  - browser-bridge.js
+  - browser-preload.js
+  - browser-chrome.js
+  - browser-chrome.html
+  - package.json
+  - icon.ico
+  - splash.html
+
+extraResources:
+  # 前端 dist —— 不放进 asar，始终在 resources/dist
+  - from: ../src-frontend/dist
+    to: dist
+
+  # Phase 49 → 新方案：2 个 7z 预压缩组件 + NSIS 安装时并行解压
+  # 对标 Docker Desktop / Postman：把数十万文件压缩成 2 个 7z，打包时间 24 分钟 → 5 分钟
+  # 拆分粒度：单组件变化只重打包该组件，便于增量分发
+  # 注意：chromadb 已被 sqlite-vec 替代（~200KB vs ~200MB），不再需要独立 7z 组件
+  # 注意：OpenClaw / Hermes 改为外部 agent，不再随安装包分发 node-embed 运行时
+  - from: ../src-python/python-core.7z
+    to: python-core.7z
+  - from: ../src-python/python-ml.7z
+    to: python-ml.7z
+
+  # 7z.exe + 7z.dll —— 安装时调用的解压工具（2MB，跟随安装包分发）
+  - from: ../src-electron/scripts/nsis/7z.exe
+    to: 7z.exe
+  - from: ../src-electron/scripts/nsis/7z.dll
+    to: 7z.dll
+  # extract-runtime.ps1 —— 并行解压脚本（2 个 7z 同时解压，加速安装）
+  - from: ../src-electron/scripts/nsis/extract-runtime.ps1
+    to: extract-runtime.ps1
+  # restartmanager-kill.ps1 —— 用 Windows Restart Manager API 结束占用安装文件的进程
+  - from: ../src-electron/scripts/nsis/restartmanager-kill.ps1
+    to: restartmanager-kill.ps1
+
+  # src-python 后端源码（loose files，排除运行时和测试）
+  - from: ../src-python
+    to: _up_/src-python
+    filter:
+      - "**/*"
+      - "!python-embed/**"
+      - "!**/__pycache__/**"
+      - "!**/*.pyc"
+      - "!tests/**"
+      - "!MagicMock/**"
+      - "!.prebuild-hash"
+      - "!.dev-backend.log"
+      - "!.ruff_cache/**"
+      - "!.pytest_cache/**"
+      - "!python-core.7z"
+      - "!python-ml.7z"
+      - "!python-chromadb.7z"  # 已移除 chromadb，保留排除以免旧文件残留
+      - "!python-embed.zip"
+  - from: ../config
+    to: _up_/config
+
+win:
+  target:
+    - nsis
+  icon: icon.ico
+  artifactName: ${productName}_${version}_x64-setup.${ext}
+  sign: null
+  signAndEditExecutable: false
+
+publish:
+  provider: github
+  owner: Yuncat
+  repo: Yuncat
+
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  installerIcon: icon.ico
+  uninstallerIcon: icon.ico
+  differentialPackage: false  # 新方案：关闭差分更新。预压缩 7z 已大幅减小安装包，每次全量下载可接受（GitHub 带宽免费）
+  include: scripts/nsis/custom.nsh   # 单文件入口：customInstall(7z 解压) + customUnInstall(卸载清理)
+  preCompressedFileExtensions: [".7z"]  # .7z 已预压缩，NSIS 直接存储不重压缩，避免对 218MB 7z 数据做无意义压缩
+  deleteAppDataOnUninstall: false   # Phase 93: 由自定义脚本控制，避免误删

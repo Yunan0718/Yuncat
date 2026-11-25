@@ -1,0 +1,12 @@
+name: wf-prp_pr
+version: 0.3.0
+title: '工作�? prp_pr'
+description: 'DAG 工作流模板（3 节点�? PRP �?PR: diff �?summary �?push'
+author: Yuncat System
+category: workflow
+icon: 📤
+tags:
+- workflow
+- dag
+- prp_pr
+min_yuncat: 0.1.3

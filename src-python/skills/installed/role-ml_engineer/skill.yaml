@@ -1,0 +1,23 @@
+name: role-ml_engineer
+version: 0.3.0
+title: '角色: ML 工程�?
+description: '讨论引擎角色: 设计机器学习方案'
+author: Yuncat System
+category: role
+icon: 🎭
+tags:
+- role
+- deliberation
+- builtin
+- ml_engineer
+min_yuncat: 0.1.3
+prompt:
+  file: prompt.md
+  placement: append
+  priority: 50
+  scope:
+    tasks: []
+    languages: []
+    frameworks: []
+    modes:
+    - agent

@@ -1,0 +1,362 @@
+provider: gemini
+name: Google Gemini
+base_url: https://generativelanguage.googleapis.com/v1beta/openai
+models_url: https://generativelanguage.googleapis.com/v1beta/openai/models
+website_url: https://aistudio.google.com/apikey
+api_key_url: https://aistudio.google.com/apikey
+model: gemini-3.1-flash-lite
+auth: api_key
+models:
+- id: gemini-3-pro-preview
+  power: 3
+  name: gemini-3-pro-preview
+  context: 1048576
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: gemini-3-flash-preview
+  power: 1
+  name: gemini-3-flash-preview
+  context: 1048576
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: gemini-3.5-flash
+  power: 1
+  name: gemini-3.5-flash
+  context: 1048576
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: gemini-3.6-flash
+  power: 1
+  name: gemini-3.6-flash
+  context: 1048576
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: gemini-3.7-flash
+  power: 1
+  name: gemini-3.7-flash
+  context: 1048576
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: gemini-3.1-pro-preview
+  power: 3
+  name: gemini-3.1-pro-preview
+  context: 1048576
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: gemini-3.1-pro-preview-customtools
+  power: 3
+  name: gemini-3.1-pro-preview-customtools
+  context: 1048576
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: gemini-robotics-er-1.5-preview
+  power: 2
+  name: gemini-robotics-er-1.5-preview
+  context: 1048576
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: gemini-robotics-er-2-preview
+  power: 2
+  name: gemini-robotics-er-2-preview
+  context: 131072
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: gemini-robotics-er-1.6-preview
+  power: 2
+  name: gemini-robotics-er-1.6-preview
+  context: 131072
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: gemini-flash-latest
+  power: 1
+  name: gemini-flash-latest
+  context: 1048576
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: gemini-flash-lite-latest
+  power: 1
+  name: gemini-flash-lite-latest
+  context: 1048576
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: gemini-3.1-flash-lite-preview
+  power: 1
+  name: gemini-3.1-flash-lite-preview
+  context: 1048576
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: gemini-3.1-flash-lite
+  power: 1
+  name: gemini-3.1-flash-lite
+  context: 1048576
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: gemini-3.5-flash-lite
+  power: 1
+  name: gemini-3.5-flash-lite
+  context: 1048576
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: gemini-omni-flash-preview
+  power: 1
+  name: gemini-omni-flash-preview
+  context: 1048576
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: gemini-3.1-flash-live-preview
+  power: 1
+  name: gemini-3.1-flash-live-preview
+  context: 131072
+  supports:
+  - text
+  - tools
+  - vision
+- id: gemini-pro-latest
+  power: 3
+  name: gemini-pro-latest
+  context: 1048576
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+pricing:
+  gemini-3-pro-preview:
+    input: 2.0
+    output: 12.0
+    currency: USD
+    cached_input: 0.2
+  gemini-3-flash-preview:
+    input: 0.5
+    output: 3.0
+    currency: USD
+    cached_input: 0.05
+  gemini-3.5-flash:
+    input: 1.5
+    output: 9.0
+    currency: USD
+    cached_input: 0.15
+  gemini-3.6-flash:
+    input: 1.5
+    output: 7.5
+    currency: USD
+    cached_input: 0.15
+  gemini-3.7-flash:
+    input: 0.75
+    output: 3.75
+    currency: USD
+    cached_input: 0.075
+  gemini-3.1-pro-preview:
+    input: 2.0
+    output: 12.0
+    currency: USD
+    cached_input: 0.2
+  gemini-3.1-pro-preview-customtools:
+    input: 2.0
+    output: 12.0
+    currency: USD
+    cached_input: 0.2
+  gemini-robotics-er-1.5-preview:
+    input: 0.3
+    output: 2.5
+    currency: USD
+    cached_input: 0
+  gemini-robotics-er-2-preview:
+    input: 2.0
+    output: 10.0
+    currency: USD
+    cached_input: 0.2
+  gemini-robotics-er-1.6-preview:
+    input: 1.0
+    output: 5.0
+    currency: USD
+  gemini-2.0-flash:
+    input: 0.1
+    output: 0.4
+    currency: USD
+    cached_input: 0.025
+  gemini-2.0-flash-001:
+    input: 0.1
+    output: 0.4
+    currency: USD
+    cached_input: 0.025
+  gemini-2.0-flash-lite:
+    input: 0.075
+    output: 0.3
+    currency: USD
+    cached_input: 0.0187
+  gemini-2.5-flash:
+    input: 0.3
+    output: 2.5
+    currency: USD
+    cached_input: 0.03
+  gemini-2.5-flash-lite:
+    input: 0.1
+    output: 0.4
+    currency: USD
+    cached_input: 0.01
+  gemini-2.5-flash-lite-preview-09-2025:
+    input: 0.1
+    output: 0.4
+    currency: USD
+    cached_input: 0.01
+  gemini-2.5-flash-preview-09-2025:
+    input: 0.3
+    output: 2.5
+    currency: USD
+    cached_input: 0.075
+  gemini-flash-latest:
+    input: 0.3
+    output: 2.5
+    currency: USD
+    cached_input: 0.03
+  gemini-flash-lite-latest:
+    input: 0.1
+    output: 0.4
+    currency: USD
+    cached_input: 0.01
+  gemini-2.5-flash-lite-preview-06-17:
+    input: 0.1
+    output: 0.4
+    currency: USD
+    cached_input: 0.025
+  gemini-2.5-pro:
+    input: 1.25
+    output: 10.0
+    currency: USD
+    cached_input: 0.125
+  gemini-2.5-computer-use-preview-10-2025:
+    input: 1.25
+    output: 10.0
+    currency: USD
+  gemini-3.1-flash-lite-preview:
+    input: 0.25
+    output: 1.5
+    currency: USD
+    cached_input: 0.025
+  gemini-3.1-flash-lite:
+    input: 0.25
+    output: 1.5
+    currency: USD
+    cached_input: 0.025
+  gemini-3.5-flash-lite:
+    input: 0.3
+    output: 2.5
+    currency: USD
+    cached_input: 0.03
+  gemini-omni-flash-preview:
+    input: 1.5
+    output: 9.0
+    currency: USD
+  gemini-2.5-pro-preview-tts:
+    input: 1.25
+    output: 10.0
+    currency: USD
+    cached_input: 0.125
+  gemini-exp-1114:
+    input: 0
+    output: 0
+    currency: USD
+  gemini-exp-1206:
+    input: 0.3
+    output: 2.5
+    currency: USD
+    cached_input: 0.03
+  gemini-gemma-2-27b-it:
+    input: 0.35
+    output: 1.05
+    currency: USD
+  gemini-gemma-2-9b-it:
+    input: 0.35
+    output: 1.05
+    currency: USD
+  gemma-3-27b-it:
+    input: 0
+    output: 0
+    currency: USD
+  learnlm-1.5-pro-experimental:
+    input: 0
+    output: 0
+    currency: USD
+  lyria-3-clip-preview:
+    input: 0
+    output: 0
+    currency: USD
+  lyria-3-pro-preview:
+    input: 0
+    output: 0
+    currency: USD
+  gemini-2.0-flash-lite-001:
+    input: 0.075
+    output: 0.3
+    currency: USD
+    cached_input: 0.0187
+  gemini-2.5-flash-native-audio-latest:
+    input: 0.3
+    output: 2.5
+    currency: USD
+  gemini-2.5-flash-native-audio-preview-09-2025:
+    input: 0.3
+    output: 2.5
+    currency: USD
+  gemini-2.5-flash-native-audio-preview-12-2025:
+    input: 0.3
+    output: 2.5
+    currency: USD
+  gemini-3.1-flash-live-preview:
+    input: 0.75
+    output: 4.5
+    currency: USD
+  gemini-pro-latest:
+    input: 1.25
+    output: 10.0
+    currency: USD
+    cached_input: 0.125

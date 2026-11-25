@@ -1,0 +1,22 @@
+{
+  "_comment": "后端有、但前端（渲染进程 + Electron 主进程）从不引用的路由。这些要么是给外部调用方的 API，要么是尚未接线的功能——两者都会造成「看起来有、其实用不了」的错觉，所以显式登记在案并写明原因。新增这类路由必须写进本清单；把路由接上前端后从本清单移除即可。守卫：tests/contract/test_api_surface_reverse.py",
+  "routes": {
+    "GET /api/v1/analytics/llm-cache/stats": "本地响应缓存统计：桌面端展示的是账本口径 /analytics/cache-stats",
+    "GET /api/v1/jobs/{task_id}": "单个 Job 详情：桌面端用列表接口，详情供脚本/调试",
+    "GET /api/v1/messaging/platforms": "消息平台列表：外部集成自检用",
+    "GET /api/v1/prompt-library/behaviors/{behavior_id}": "单个行为详情：桌面端用列表接口 /prompt-library/behaviors",
+    "GET /api/v1/prompt-library/roles/{role_id}": "单个角色详情：桌面端用列表接口 /prompt-library/roles",
+    "GET /api/v1/skills/marketplace/search": "远程技能市场搜索：桌面端当前用本地 /skills 列表 + 安装接口",
+    "GET /api/v1/skills/marketplace/{skill_id}": "远程技能详情：同上",
+    "GET /api/v1/snapshots/{task_id}": "快照时间线查询：桌面端用 /tasks/{id}/undo 动作，此端点供调试/外部",
+    "POST /api/v1/agents/{agent_id}/tools/{tool_name}/invoke": "对外调试用：按名字手动调用某 agent 的工具（桌面端 UI 不暴露）",
+    "POST /api/v1/analytics/arena/vote": "Arena 投票的 analytics 变体：桌面端用 /api/v1/arena/battle/{id}/vote",
+    "POST /api/v1/hitl/respond": "HITL 响应：桌面端走 /api/v1/approvals/{token}/approve|reject",
+    "POST /api/v1/hooks/channel": "消息通道投递：外部渠道集成",
+    "POST /api/v1/hooks/ci-failure": "CI 失败事件上报入口：外部 CI 调用",
+    "POST /api/v1/hooks/trigger": "Webhook 入口：由外部系统/CI 调用",
+    "POST /api/v1/snapshots/{task_id}/restore": "快照回退：与 /tasks/{id}/undo 等价，保留为 API 形态",
+    "POST /api/v1/workflows/templates/{template_id}/edit": "模板编辑：桌面端走 PUT /workflows/{id}；且从模板加载后保存会另存为新工作流，不覆盖模板"
+  },
+  "total": 16
+}

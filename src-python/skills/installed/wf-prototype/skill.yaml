@@ -1,0 +1,12 @@
+name: wf-prototype
+version: 0.3.0
+title: '工作�? prototype'
+description: 'DAG 工作流模板（2 节点�? 快速原�? 生成 �?评估'
+author: Yuncat System
+category: workflow
+icon: �?
+tags:
+- workflow
+- dag
+- prototype
+min_yuncat: 0.1.3

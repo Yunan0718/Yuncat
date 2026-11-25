@@ -1,0 +1,23 @@
+name: role-frontend
+version: 0.3.0
+title: '角色: 前端专家'
+description: '讨论引擎角色: 优化前端架构和用户体�?
+author: Yuncat System
+category: role
+icon: 🎭
+tags:
+- role
+- deliberation
+- builtin
+- frontend
+min_yuncat: 0.1.3
+prompt:
+  file: prompt.md
+  placement: append
+  priority: 50
+  scope:
+    tasks: []
+    languages: []
+    frameworks: []
+    modes:
+    - agent

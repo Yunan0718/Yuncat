@@ -1,0 +1,159 @@
+# Phase 75: Behavior 元数据注册表
+#
+# 作用：
+#   1. 给 behavior 排序（priority 数字越大越优先）
+#   2. 标记 applies_to（适用语言列表；空列表 = 通用）
+#   3. commander._load_behaviors(selected_ids) 按 priority 排序加载选中 behavior
+#
+# 未在此 manifest 注册的 behavior（如未来新增的语言特定 behavior）默认 priority=50。
+# manifest 缺失或解析失败时，commander 回退到 Phase 27 旧逻辑（按文件顺序加载）。
+
+behaviors:
+  # ── 通用行为（general.yaml，跨语言）──
+  - id: simplicity
+    priority: 100
+    applies_to: []
+  - id: naming
+    priority: 95
+    applies_to: []
+  - id: code-review
+    priority: 90
+    applies_to: []
+  - id: testing
+    priority: 85
+    applies_to: []
+  - id: security-mindset
+    priority: 80
+    applies_to: []
+  - id: input-validation
+    priority: 75
+    applies_to: []
+  - id: error-communication
+    priority: 70
+    applies_to: []
+  - id: documentation
+    priority: 65
+    applies_to: []
+  - id: performance
+    priority: 60
+    applies_to: []
+  - id: immutability
+    priority: 55
+    applies_to: []
+  - id: file-organization
+    priority: 50
+    applies_to: []
+  - id: communication
+    priority: 45
+    applies_to: []
+  - id: git-workflow
+    priority: 40
+    applies_to: []
+  - id: debugging
+    priority: 42
+    applies_to: []
+  - id: refactoring
+    priority: 38
+    applies_to: []
+  - id: dependency-management
+    priority: 35
+    applies_to: []
+  - id: database
+    priority: 33
+    applies_to: []
+  - id: tdd
+    priority: 31
+    applies_to: []
+  - id: devops
+    priority: 29
+    applies_to: []
+
+  # ── Python 特定（python.yaml）──
+  - id: python-coding-standards
+    priority: 30
+    applies_to: [python]
+  - id: python-error-handling
+    priority: 28
+    applies_to: [python]
+  - id: python-testing
+    priority: 26
+    applies_to: [python]
+  - id: python-async
+    priority: 24
+    applies_to: [python]
+  - id: python-imports
+    priority: 22
+    applies_to: [python]
+  - id: python-types
+    priority: 20
+    applies_to: [python]
+  - id: python-performance
+    priority: 18
+    applies_to: [python]
+  - id: python-security
+    priority: 16
+    applies_to: [python]
+  - id: python-dependencies
+    priority: 14
+    applies_to: [python]
+  - id: python-docstrings
+    priority: 12
+    applies_to: [python]
+
+  # ── TypeScript 特定（typescript.yaml）──
+  - id: ts-coding-standards
+    priority: 30
+    applies_to: [typescript]
+  - id: ts-immutability
+    priority: 28
+    applies_to: [typescript]
+  - id: ts-error-handling
+    priority: 26
+    applies_to: [typescript]
+  - id: ts-react
+    priority: 24
+    applies_to: [typescript]
+  - id: ts-testing
+    priority: 22
+    applies_to: [typescript]
+  - id: ts-state
+    priority: 20
+    applies_to: [typescript]
+  - id: ts-performance
+    priority: 18
+    applies_to: [typescript]
+  - id: ts-security
+    priority: 16
+    applies_to: [typescript]
+  - id: ts-css
+    priority: 14
+    applies_to: [typescript]
+  - id: ts-imports
+    priority: 12
+    applies_to: [typescript]
+
+  # ── Go 特定（golang.yaml）──
+  - id: go-idioms
+    priority: 30
+    applies_to: [golang]
+  - id: go-concurrency
+    priority: 28
+    applies_to: [golang]
+  - id: go-testing
+    priority: 26
+    applies_to: [golang]
+  - id: go-error-handling
+    priority: 24
+    applies_to: [golang]
+  - id: go-structs
+    priority: 22
+    applies_to: [golang]
+  - id: go-performance
+    priority: 20
+    applies_to: [golang]
+  - id: go-modules
+    priority: 18
+    applies_to: [golang]
+  - id: go-security
+    priority: 16
+    applies_to: [golang]

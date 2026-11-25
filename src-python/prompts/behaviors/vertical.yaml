@@ -1,0 +1,33 @@
+# Phase 75: 垂直领域行为片段
+#
+# 这些片段是 workflow 模板的补充——在特定场景下额外注入的行为约束。
+# 与 general.yaml 的区别：
+#   - general.yaml 的 behavior 是常驻的（每次都加载）
+#   - vertical.yaml 的片段是按场景注入的（如用户选择 api-design workflow 时）
+#
+# 用法：commander._load_behaviors(selected_ids) 可包含 vertical 片段 id，
+#       按 manifest.priority 排序后与其他 behavior 一起拼接。
+
+api-design: |
+  ## API 设计约束
+  - 资源命名用复数名词（/users 而非 /getUsers）
+  - HTTP 方法语义严格：GET=读取, POST=创建, PUT=全量更新, PATCH=部分更新, DELETE=删除
+  - 状态码：201 Created, 204 No Content, 400/422 参数错误, 409 冲突
+  - 分页响应包含 next/prev 链接
+  - 错误格式统一结构：error 包含 code/message/details 三字段
+
+tdd: |
+  ## TDD 纪律
+  - 严格遵循 红→绿→重构 循环——不跳步
+  - 先写失败测试，确认测试真的失败（红），再写实现
+  - 实现只让测试通过——不多写一行
+  - 绿后立即重构——消除重复，保持测试通过
+  - 每个循环 ≤ 5 分钟——超时说明步子太大
+
+security-audit: |
+  ## 安全审计纪律
+  - 依赖扫描：先查 CVE，标记过时依赖
+  - 代码审计：重点查注入风险、认证绕过、权限提升
+  - 修复优先级：Critical > High > Medium > Low
+  - 复测：修复后重新扫描确认漏洞已消除
+  - 不修复不报告——每个发现必须有修复建议或风险说明

@@ -1,0 +1,7 @@
+# /clear — 清空当前会话上下文（本地命令）
+# Phase 64: 前端本地拦截——新建会话并清空消息列表
+name: clear
+slash_command: /clear
+description: "清空当前会话上下文——开始新的对话"
+category: core
+local: true

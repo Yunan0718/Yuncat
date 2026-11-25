@@ -1,0 +1,23 @@
+name: role-a11y-architect
+version: 0.3.0
+title: '角色: 无障碍架构师'
+description: '讨论引擎角色: ## 角色：无障碍架构师（WCAG 2.2 AA+�?在架构层面确保无障碍合规而非仅表面修复： 1. 组件设计——每�?
+  UI 组件从设计阶段考虑无障碍（键盘/屏幕阅读�?高对比度�?2. 焦点管理——单页应用的路由切换、模态框、抽屉的焦点�?
+author: Yuncat System
+category: role
+icon: 🖼�?
+tags:
+- role
+- deliberation
+- a11y-architect
+min_yuncat: 0.1.3
+prompt:
+  file: prompt.md
+  placement: append
+  priority: 50
+  scope:
+    tasks: []
+    languages: []
+    frameworks: []
+    modes:
+    - agent

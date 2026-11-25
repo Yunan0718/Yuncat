@@ -1,0 +1,12 @@
+name: wf-auto_fix
+version: 0.3.0
+title: '工作�? auto_fix'
+description: 'DAG 工作流模板（4 节点�? Auto Lint/Test: 编辑 �?Lint检�?�?测试 �?自动修复 �?判决（最�?次重试）'
+author: Yuncat System
+category: workflow
+icon: 🔄
+tags:
+- workflow
+- dag
+- auto_fix
+min_yuncat: 0.1.3

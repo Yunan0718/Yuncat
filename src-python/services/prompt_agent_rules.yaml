@@ -1,0 +1,69 @@
+# Phase 74: PromptAgent 规则推荐——关键词→behavior/role/workflow 映射
+#
+# 用途：当 LLM 推荐失败时（超时 / JSON 解析错误 / 未配置模型 / adapter 缺失）的兜底规则。
+# 匹配语义：
+#   - 按 rules 列表顺序遍历，首个任一 keyword 命中（大小写不敏感，substring 匹配）的规则胜出
+#   - 全部不命中时使用 default
+# 字段说明：
+#   role_ids          — 0~N 个角色 id（需对应 prompts/roles/*.yaml 或 DB roles.id）
+#   behavior_ids      — 0~N 个行为约束 id（需对应 prompts/behaviors/*.yaml 的 key）
+#   workflow_template — 工作流模板 name（需对应 workflow_templates.BUILTIN_TEMPLATES[].name）或 null
+#   reason            — 简短中文说明
+#   confidence        — 0.0~1.0；兜底规则通常 0.4~0.75（LLM 失败兜底不应高于 0.75）
+
+rules:
+  - id: tdd
+    keywords: ["test", "unittest", "pytest", "tdd", "测试", "单元测试"]
+    role_ids: ["developer"]
+    behavior_ids: ["testing", "simplicity"]
+    workflow_template: "zh_tdd_loop"
+    reason: "用户要求涉及测试，TDD 红绿重构循环最合适"
+    confidence: 0.7
+
+  - id: security
+    keywords: ["security", "audit", "vuln", "漏洞", "安全", "审计", "injection", "xss"]
+    role_ids: ["reviewer"]
+    behavior_ids: ["security-mindset", "input-validation"]
+    workflow_template: "zh_security_review"
+    reason: "用户要求涉及安全，安全审计工作流最合适"
+    confidence: 0.75
+
+  - id: code-review
+    keywords: ["review", "code review", "审查", "代码审查", "inspect"]
+    role_ids: ["reviewer"]
+    behavior_ids: ["code-review"]
+    workflow_template: "zh_code_review"
+    reason: "用户要求代码审查"
+    confidence: 0.7
+
+  - id: doc
+    keywords: ["document", "documentation", "doc", "文档", "readme", "README"]
+    role_ids: ["architect"]
+    behavior_ids: ["documentation"]
+    workflow_template: "zh_doc_generation"
+    reason: "用户要求生成文档"
+    confidence: 0.7
+
+  - id: data-analysis
+    keywords: ["data", "analysis", "数据分析", "报表", "统计", "chart"]
+    role_ids: ["architect"]
+    behavior_ids: ["simplicity", "communication"]
+    workflow_template: "zh_data_analysis"
+    reason: "用户要求数据分析"
+    confidence: 0.65
+
+  - id: diagnose
+    keywords: ["debug", "diagnose", "bug", "修复", "调试", "诊断", "fix", "error"]
+    role_ids: ["developer"]
+    behavior_ids: ["error-communication", "simplicity"]
+    workflow_template: "zh_diagnose_loop"
+    reason: "用户要求调试修复，诊断循环最合适"
+    confidence: 0.65
+
+# 默认推荐（无任何关键词命中时使用）
+default:
+  role_ids: ["developer"]
+  behavior_ids: ["simplicity", "naming"]
+  workflow_template: null
+  reason: "无明确关键词命中，使用通用开发默认"
+  confidence: 0.4

@@ -1,0 +1,81 @@
+provider: qwen
+name: 通义千问
+base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+models_url: https://dashscope.aliyuncs.com/compatible-mode/v1/models
+website_url: https://bailian.console.aliyun.com/
+api_key_url: https://bailian.console.aliyun.com/
+model: qwen3.8-max
+auth: api_key
+models:
+- id: qwen3.8-max
+  power: 3
+  name: Qwen3.8 Max
+  context: 1000000
+  supports:
+  - text
+  - tools
+  - thinking
+  - vision
+- id: qwen3.7-max
+  power: 3
+  name: Qwen3.7 Max
+  context: 1000000
+  supports:
+  - text
+  - tools
+  - thinking
+- id: qwen3.7-plus
+  power: 2
+  name: Qwen3.7 Plus
+  context: 1000000
+  supports:
+  - text
+  - tools
+  - thinking
+  - vision
+- id: qwen3.7-flash
+  power: 1
+  name: Qwen3.7 Flash
+  context: 1000000
+  supports:
+  - text
+  - tools
+  - thinking
+- id: qwen3.6-flash
+  power: 1
+  name: Qwen3.6 Flash
+  context: 1000000
+  supports:
+  - text
+  - tools
+  - thinking
+extra_params:
+  qwen3.8-max:
+    result_format: message
+  qwen3.7-max:
+    result_format: message
+  qwen3.7-plus:
+    result_format: message
+  qwen3.7-flash:
+    result_format: message
+pricing:
+  qwen3.8-max:
+    input: 12
+    output: 36
+    currency: CNY
+  qwen3.7-max:
+    input: 12
+    output: 36
+    currency: CNY
+  qwen3.7-plus:
+    input: 2
+    output: 8
+    currency: CNY
+  qwen3.7-flash:
+    input: 0.5
+    output: 2
+    currency: CNY
+  qwen3.6-flash:
+    input: 1.2
+    output: 7.2
+    currency: CNY

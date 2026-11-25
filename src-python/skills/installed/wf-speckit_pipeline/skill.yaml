@@ -1,0 +1,12 @@
+name: wf-speckit_pipeline
+version: 0.3.0
+title: '工作�? speckit_pipeline'
+description: 'DAG 工作流模板（6 节点�? speckit 规格→实现管�? specify→clarify→plan→tasks→analyze→implement'
+author: Yuncat System
+category: workflow
+icon: 🚀
+tags:
+- workflow
+- dag
+- speckit_pipeline
+min_yuncat: 0.1.3

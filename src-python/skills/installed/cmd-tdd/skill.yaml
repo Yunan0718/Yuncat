@@ -1,0 +1,12 @@
+name: cmd-tdd
+version: 0.3.0
+title: '命令: /tdd'
+description: 测试驱动开发——先写测试、再实现、最后重�?
+author: Yuncat System
+category: command
+icon: /
+tags:
+- command
+- slash
+- tdd
+min_yuncat: 0.1.3

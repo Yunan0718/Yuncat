@@ -1,0 +1,9 @@
+provider: openrouter
+name: OpenRouter
+base_url: https://openrouter.ai/api/v1
+models_url: https://openrouter.ai/api/v1/models
+website_url: https://openrouter.ai/keys
+api_key_url: https://openrouter.ai/keys
+model: openai/gpt-4.1
+auth: api_key
+models: []

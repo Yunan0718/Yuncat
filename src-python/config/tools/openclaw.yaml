@@ -1,0 +1,75 @@
+# OpenClaw Agent Tool Manifest (Phase 26 — Adapter v2)
+# 声明 OpenClaw ClawHub 1.37万+ 技能中适合 Yuncat 的子集
+
+agent: openclaw
+version: "2026.6.1"
+source: static
+
+tools:
+  # ---- 视觉 ----
+  - name: openclaw_vision
+    description: "Peekaboo v3 视觉引擎——截图分析/OCR/GUI 元素识别"
+    category: vision
+    parameters:
+      type: object
+      properties:
+        image_base64: { type: string, description: "Base64 编码的图片" }
+        prompt: { type: string, description: "分析提示（如'这张截图有什么错误'）" }
+      required: [image_base64]
+
+  # ---- 浏览器 ----
+  - name: openclaw_browser
+    description: "Puppeteer 浏览器自动化"
+    category: browser
+    parameters:
+      type: object
+      properties:
+        url: { type: string, description: "目标 URL" }
+        action: { type: string, enum: [navigate, screenshot, click, fill, extract] }
+        selector: { type: string, description: "CSS 选择器（click/fill 时需要）" }
+        value: { type: string, description: "输入值（fill 时需要）" }
+      required: [url]
+
+  # ---- 搜索 ----
+  - name: openclaw_web_search
+    description: "Web 搜索（通过 OpenClaw 内置工具）"
+    category: search
+    parameters:
+      type: object
+      properties:
+        query: { type: string, description: "搜索查询" }
+      required: [query]
+
+  # ---- 通讯网关 ----
+  - name: openclaw_notify
+    description: "通过通讯平台发送通知（Telegram/Discord/Slack/钉钉/企微等 50+ 平台）"
+    category: comms
+    parameters:
+      type: object
+      properties:
+        platform: { type: string, enum: [telegram, discord, slack, dingtalk, wechat_work, whatsapp] }
+        message: { type: string, description: "通知内容" }
+      required: [platform, message]
+
+  # ---- GitHub ----
+  - name: openclaw_github
+    description: "GitHub GraphQL API——查询 Issue/PR/Workflow"
+    category: general
+    parameters:
+      type: object
+      properties:
+        action: { type: string, enum: [list_issues, get_pr, list_workflows, search_code] }
+        repo: { type: string, description: "owner/repo 格式" }
+        query: { type: string, description: "搜索/过滤参数" }
+      required: [action]
+
+  # ---- 文件/PDF ----
+  - name: openclaw_pdf
+    description: "PDF 处理——阅读/提取/总结"
+    category: file
+    parameters:
+      type: object
+      properties:
+        path: { type: string, description: "PDF 文件路径" }
+        action: { type: string, enum: [read, summarize, extract_tables] }
+      required: [path]

@@ -1,0 +1,501 @@
+provider: grok
+name: Grok (xAI)
+base_url: https://api.x.ai/v1
+models_url: https://api.x.ai/v1/models
+website_url: https://console.x.ai
+api_key_url: https://console.x.ai
+model: grok-4.6
+auth: api_key
+models:
+- id: grok-3
+  power: 2
+  name: grok-3
+  context: 131072
+  supports:
+  - text
+  - tools
+- id: grok-3-fast-latest
+  power: 1
+  name: grok-3-fast-latest
+  context: 131072
+  supports:
+  - text
+  - tools
+- id: grok-3-latest
+  power: 2
+  name: grok-3-latest
+  context: 131072
+  supports:
+  - text
+  - tools
+- id: grok-3-mini
+  power: 1
+  name: grok-3-mini
+  context: 131072
+  supports:
+  - text
+  - tools
+  - thinking
+- id: grok-3-mini-beta
+  power: 1
+  name: grok-3-mini-beta
+  context: 131072
+  supports:
+  - text
+  - tools
+  - thinking
+- id: grok-3-mini-fast
+  power: 1
+  name: grok-3-mini-fast
+  context: 131072
+  supports:
+  - text
+  - tools
+  - thinking
+- id: grok-3-mini-fast-beta
+  power: 1
+  name: grok-3-mini-fast-beta
+  context: 131072
+  supports:
+  - text
+  - tools
+  - thinking
+- id: grok-3-mini-fast-latest
+  power: 1
+  name: grok-3-mini-fast-latest
+  context: 131072
+  supports:
+  - text
+  - tools
+  - thinking
+- id: grok-3-mini-latest
+  power: 1
+  name: grok-3-mini-latest
+  context: 131072
+  supports:
+  - text
+  - tools
+  - thinking
+- id: grok-4
+  power: 2
+  name: grok-4
+  context: 256000
+  supports:
+  - text
+  - tools
+- id: grok-4-fast-reasoning
+  power: 1
+  name: grok-4-fast-reasoning
+  context: 2000000
+  supports:
+  - text
+  - tools
+- id: grok-4-fast-non-reasoning
+  power: 1
+  name: grok-4-fast-non-reasoning
+  context: 2000000
+  supports:
+  - text
+  - tools
+- id: grok-4-0709
+  power: 2
+  name: grok-4-0709
+  context: 256000
+  supports:
+  - text
+  - tools
+- id: grok-4-latest
+  power: 2
+  name: grok-4-latest
+  context: 256000
+  supports:
+  - text
+  - tools
+- id: grok-4-1-fast
+  power: 1
+  name: grok-4-1-fast
+  context: 2000000
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: grok-4-1-fast-reasoning
+  power: 1
+  name: grok-4-1-fast-reasoning
+  context: 2000000
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: grok-4-1-fast-reasoning-latest
+  power: 1
+  name: grok-4-1-fast-reasoning-latest
+  context: 2000000
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: grok-4-1-fast-non-reasoning
+  power: 1
+  name: grok-4-1-fast-non-reasoning
+  context: 2000000
+  supports:
+  - text
+  - tools
+  - vision
+- id: grok-4-1-fast-non-reasoning-latest
+  power: 1
+  name: grok-4-1-fast-non-reasoning-latest
+  context: 2000000
+  supports:
+  - text
+  - tools
+  - vision
+- id: grok-4.20-multi-agent-beta-0309
+  power: 2
+  name: grok-4.20-multi-agent-beta-0309
+  context: 1000000
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: grok-4.20-beta-0309-reasoning
+  power: 2
+  name: grok-4.20-beta-0309-reasoning
+  context: 1000000
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: grok-4.20-0309-reasoning
+  power: 2
+  name: grok-4.20-0309-reasoning
+  context: 1000000
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: grok-4.20-beta-0309-non-reasoning
+  power: 2
+  name: grok-4.20-beta-0309-non-reasoning
+  context: 1000000
+  supports:
+  - text
+  - tools
+  - vision
+- id: grok-4.3
+  power: 2
+  name: grok-4.3
+  context: 1000000
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: grok-4.3-latest
+  power: 2
+  name: grok-4.3-latest
+  context: 1000000
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: grok-4.5
+  power: 2
+  name: grok-4.5
+  context: 500000
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: grok-4.5-latest
+  power: 2
+  name: grok-4.5-latest
+  context: 500000
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: grok-4.6
+  power: 2
+  name: grok-4.6
+  context: 500000
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: grok-code-fast
+  power: 1
+  name: grok-code-fast
+  context: 256000
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: grok-code-fast-1
+  power: 1
+  name: grok-code-fast-1
+  context: 256000
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: grok-code-fast-1-0825
+  power: 1
+  name: grok-code-fast-1-0825
+  context: 256000
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: grok-4.20-0309-non-reasoning
+  power: 2
+  name: grok-4.20-0309-non-reasoning
+  context: 1000000
+  supports:
+  - text
+  - tools
+  - vision
+- id: grok-4.20-multi-agent-0309
+  power: 2
+  name: grok-4.20-multi-agent-0309
+  context: 1000000
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: grok-build-0.1
+  power: 2
+  name: grok-build-0.1
+  context: 256000
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+pricing:
+  grok-2:
+    input: 2.0
+    output: 10.0
+    currency: USD
+  grok-2-1212:
+    input: 2.0
+    output: 10.0
+    currency: USD
+  grok-2-latest:
+    input: 2.0
+    output: 10.0
+    currency: USD
+  grok-2-vision:
+    input: 2.0
+    output: 10.0
+    currency: USD
+  grok-2-vision-1212:
+    input: 2.0
+    output: 10.0
+    currency: USD
+  grok-2-vision-latest:
+    input: 2.0
+    output: 10.0
+    currency: USD
+  grok-3:
+    input: 3.0
+    output: 15.0
+    currency: USD
+    cached_input: 0.75
+  # 以下两个 -beta 别名已从 models 列表移除（同代已有稳定别名），保留定价以便
+  # 直接写死旧 id 的调用仍能算出成本——孤儿定价无害，删掉反而是信息损失。
+  grok-3-beta:
+    input: 3.0
+    output: 15.0
+    currency: USD
+    cached_input: 0.75
+  grok-3-fast-beta:
+    input: 5.0
+    output: 25.0
+    currency: USD
+    cached_input: 1.25
+  grok-3-fast-latest:
+    input: 5.0
+    output: 25.0
+    currency: USD
+    cached_input: 1.25
+  grok-3-latest:
+    input: 3.0
+    output: 15.0
+    currency: USD
+    cached_input: 0.75
+  grok-3-mini:
+    input: 0.3
+    output: 0.5
+    currency: USD
+    cached_input: 0.075
+  grok-3-mini-beta:
+    input: 0.3
+    output: 0.5
+    currency: USD
+    cached_input: 0.075
+  grok-3-mini-fast:
+    input: 0.6
+    output: 4.0
+    currency: USD
+    cached_input: 0.15
+  grok-3-mini-fast-beta:
+    input: 0.6
+    output: 4.0
+    currency: USD
+    cached_input: 0.15
+  grok-3-mini-fast-latest:
+    input: 0.6
+    output: 4.0
+    currency: USD
+    cached_input: 0.15
+  grok-3-mini-latest:
+    input: 0.3
+    output: 0.5
+    currency: USD
+    cached_input: 0.075
+  grok-4:
+    input: 3.0
+    output: 15.0
+    currency: USD
+  grok-4-fast-reasoning:
+    input: 0.2
+    output: 0.5
+    currency: USD
+    cached_input: 0.05
+  grok-4-fast-non-reasoning:
+    input: 0.2
+    output: 0.5
+    currency: USD
+    cached_input: 0.05
+  grok-4-0709:
+    input: 3.0
+    output: 15.0
+    currency: USD
+  grok-4-latest:
+    input: 3.0
+    output: 15.0
+    currency: USD
+  grok-4-1-fast:
+    input: 0.2
+    output: 0.5
+    currency: USD
+    cached_input: 0.05
+  grok-4-1-fast-reasoning:
+    input: 0.2
+    output: 0.5
+    currency: USD
+    cached_input: 0.05
+  grok-4-1-fast-reasoning-latest:
+    input: 0.2
+    output: 0.5
+    currency: USD
+    cached_input: 0.05
+  grok-4-1-fast-non-reasoning:
+    input: 0.2
+    output: 0.5
+    currency: USD
+    cached_input: 0.05
+  grok-4-1-fast-non-reasoning-latest:
+    input: 0.2
+    output: 0.5
+    currency: USD
+    cached_input: 0.05
+  grok-4.20-multi-agent-beta-0309:
+    input: 1.25
+    output: 2.5
+    currency: USD
+    cached_input: 0.2
+  grok-4.20-beta-0309-reasoning:
+    input: 1.25
+    output: 2.5
+    currency: USD
+    cached_input: 0.2
+  grok-4.20-0309-reasoning:
+    input: 1.25
+    output: 2.5
+    currency: USD
+    cached_input: 0.2
+  grok-4.20-beta-0309-non-reasoning:
+    input: 1.25
+    output: 2.5
+    currency: USD
+    cached_input: 0.2
+  grok-4.3:
+    input: 1.25
+    output: 2.5
+    currency: USD
+    cached_input: 0.2
+  grok-4.3-latest:
+    input: 1.25
+    output: 2.5
+    currency: USD
+    cached_input: 0.2
+  grok-4.5:
+    input: 2.0
+    output: 6.0
+    currency: USD
+    cached_input: 0.3
+  grok-4.5-latest:
+    input: 2.0
+    output: 6.0
+    currency: USD
+    cached_input: 0.3
+  grok-4.6:
+    input: 2.0
+    output: 6.0
+    currency: USD
+    cached_input: 0.5
+  grok-beta:
+    input: 5.0
+    output: 15.0
+    currency: USD
+  grok-code-fast:
+    input: 1.0
+    output: 2.0
+    currency: USD
+    cached_input: 0.2
+  grok-code-fast-1:
+    input: 1.0
+    output: 2.0
+    currency: USD
+    cached_input: 0.2
+  grok-code-fast-1-0825:
+    input: 1.0
+    output: 2.0
+    currency: USD
+    cached_input: 0.2
+  grok-vision-beta:
+    input: 5.0
+    output: 15.0
+    currency: USD
+  grok-4.20-0309-non-reasoning:
+    input: 1.25
+    output: 2.5
+    currency: USD
+    cached_input: 0.2
+  grok-4.20-multi-agent-0309:
+    input: 1.25
+    output: 2.5
+    currency: USD
+    cached_input: 0.2
+  grok-build-0.1:
+    input: 1.0
+    output: 2.0
+    currency: USD
+    cached_input: 0.2

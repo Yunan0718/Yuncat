@@ -1,0 +1,196 @@
+provider: kimi
+name: Kimi (月之暗面)
+base_url: https://api.moonshot.cn/v1
+models_url: https://api.moonshot.cn/v1/models
+website_url: https://platform.moonshot.cn/console/api-keys
+api_key_url: https://platform.moonshot.cn/console/api-keys
+model: kimi-k2.6
+auth: api_key
+models:
+- id: kimi-k2-0711-preview
+  power: 2
+  name: kimi-k2-0711-preview
+  context: 131072
+  supports:
+  - text
+  - tools
+- id: kimi-k2-0905-preview
+  power: 2
+  name: kimi-k2-0905-preview
+  context: 262144
+  supports:
+  - text
+  - tools
+- id: kimi-k2-turbo-preview
+  power: 1
+  name: kimi-k2-turbo-preview
+  context: 262144
+  supports:
+  - text
+  - tools
+- id: kimi-k2.6
+  power: 2
+  name: kimi-k2.6
+  context: 262144
+  supports:
+  - text
+  - tools
+  - vision
+  - thinking
+- id: kimi-latest
+  power: 2
+  name: kimi-latest
+  context: 131072
+  supports:
+  - text
+  - tools
+  - vision
+- id: kimi-latest-128k
+  power: 2
+  name: kimi-latest-128k
+  context: 131072
+  supports:
+  - text
+  - tools
+  - vision
+- id: kimi-latest-32k
+  power: 2
+  name: kimi-latest-32k
+  context: 32768
+  supports:
+  - text
+  - tools
+  - vision
+- id: kimi-latest-8k
+  power: 2
+  name: kimi-latest-8k
+  context: 8192
+  supports:
+  - text
+  - tools
+  - vision
+- id: kimi-thinking-preview
+  power: 3
+  name: kimi-thinking-preview
+  context: 131072
+  supports:
+  - text
+  - tools
+  - vision
+- id: kimi-k2-thinking
+  power: 3
+  name: kimi-k2-thinking
+  context: 262144
+  supports:
+  - text
+  - tools
+  - thinking
+- id: kimi-k2-thinking-turbo
+  power: 3
+  name: kimi-k2-thinking-turbo
+  context: 262144
+  supports:
+  - text
+  - tools
+  - thinking
+pricing:
+  kimi-k2-0711-preview:
+    input: 0.6
+    output: 2.5
+    currency: USD
+    cached_input: 0.15
+  kimi-k2-0905-preview:
+    input: 0.6
+    output: 2.5
+    currency: USD
+    cached_input: 0.15
+  kimi-k2-turbo-preview:
+    input: 1.15
+    output: 8.0
+    currency: USD
+    cached_input: 0.15
+  kimi-k2.5:
+    input: 0.6
+    output: 3.0
+    currency: USD
+    cached_input: 0.1
+  kimi-k2.6:
+    input: 0.95
+    output: 4.0
+    currency: USD
+    cached_input: 0.16
+  kimi-latest:
+    input: 2.0
+    output: 5.0
+    currency: USD
+    cached_input: 0.15
+  kimi-latest-128k:
+    input: 2.0
+    output: 5.0
+    currency: USD
+    cached_input: 0.15
+  kimi-latest-32k:
+    input: 1.0
+    output: 3.0
+    currency: USD
+    cached_input: 0.15
+  kimi-latest-8k:
+    input: 0.2
+    output: 2.0
+    currency: USD
+    cached_input: 0.15
+  kimi-thinking-preview:
+    input: 0.6
+    output: 2.5
+    currency: USD
+    cached_input: 0.15
+  kimi-k2-thinking:
+    input: 0.6
+    output: 2.5
+    currency: USD
+    cached_input: 0.15
+  kimi-k2-thinking-turbo:
+    input: 1.15
+    output: 8.0
+    currency: USD
+    cached_input: 0.15
+  moonshot-v1-128k:
+    input: 2.0
+    output: 5.0
+    currency: USD
+  moonshot-v1-128k-0430:
+    input: 2.0
+    output: 5.0
+    currency: USD
+  moonshot-v1-128k-vision-preview:
+    input: 2.0
+    output: 5.0
+    currency: USD
+  moonshot-v1-32k:
+    input: 1.0
+    output: 3.0
+    currency: USD
+  moonshot-v1-32k-0430:
+    input: 1.0
+    output: 3.0
+    currency: USD
+  moonshot-v1-32k-vision-preview:
+    input: 1.0
+    output: 3.0
+    currency: USD
+  moonshot-v1-8k:
+    input: 0.2
+    output: 2.0
+    currency: USD
+  moonshot-v1-8k-0430:
+    input: 0.2
+    output: 2.0
+    currency: USD
+  moonshot-v1-8k-vision-preview:
+    input: 0.2
+    output: 2.0
+    currency: USD
+  moonshot-v1-auto:
+    input: 2.0
+    output: 5.0
+    currency: USD

@@ -1,0 +1,12 @@
+name: cmd-snapshot
+version: 0.3.0
+title: '命令: /snapshot'
+description: 查看或回退快照——Side-git 安全�?
+author: Yuncat System
+category: command
+icon: /
+tags:
+- command
+- slash
+- snapshot
+min_yuncat: 0.1.3

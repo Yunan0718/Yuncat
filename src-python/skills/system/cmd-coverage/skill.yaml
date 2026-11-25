@@ -1,0 +1,12 @@
+name: cmd-coverage
+version: 0.3.0
+title: '命令: /coverage'
+description: 提升测试覆盖率——分析缺口→生成测试→验�?
+author: Yuncat System
+category: command
+icon: /
+tags:
+- command
+- slash
+- coverage
+min_yuncat: 0.1.3

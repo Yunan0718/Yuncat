@@ -1,0 +1,11 @@
+# /agent <id> — 切换默认 Agent 后端（本地命令）
+# Phase 64: 前端本地拦截——修改 selectedAgent
+name: agent
+slash_command: /agent
+description: "切换默认 Agent 后端——例如 /agent hermes 或 /agent openclaw"
+category: core
+local: true
+arguments:
+  - name: agent_id
+    type: string
+    description: "目标 agent id（如 hermes / openclaw）"

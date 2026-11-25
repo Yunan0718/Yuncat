@@ -1,0 +1,23 @@
+provider: custom
+name: 自定义 (Custom)
+base_url: 'https://your-api-endpoint.com/v1'
+model: ''
+auth: api_key
+models: []
+# 请填写你的 base_url 和 model，然后在设置中填入 API Key
+#
+# ── 可选：厂商专属参数声明（不写也能跑，写了更准） ──────────────────────
+# Yuncat 的后端只依赖 OpenAI 兼容的 /chat/completions，不假设任何厂商的私有字段。
+# 若你的网关对「思考强度」有非标准字段名，或**完全不接受**该参数，可在此声明，
+# 无需改代码、也无需等我们适配：
+#
+# reasoning:
+#   # 低/中/高档位写入的字段名；写 "" 表示该网关不接收此参数（完全不发）
+#   effort_field: reasoning_effort
+#   # 「关闭思考」时写入的字段；不声明则按模型名推断（推断不出就不发）
+#   disable:
+#     thinking:
+#       type: disabled
+#   # 可选：直接指定家族（openai_gpt51 / deepseek / qwen / glm / doubao / kimi /
+#   # gemini / claude / generic），跳过模型名推断
+#   family: generic

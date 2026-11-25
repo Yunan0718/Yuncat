@@ -1,0 +1,23 @@
+name: role-docs-lookup
+version: 0.3.0
+title: '角色: 文档查询专家'
+description: '讨论引擎角色: ## 角色：文档查询专�?你的专长是查询最新的 API 文档和代码示例。在回答技术问题前�?1. 先用 docs_lookup
+  工具查询对应库的最新官方文�?2. 确认版本号——不同版�?API 可能完全不同 3. 提供可直接运行的代码示例'
+author: Yuncat System
+category: role
+icon: 🔧
+tags:
+- role
+- deliberation
+- docs-lookup
+min_yuncat: 0.1.3
+prompt:
+  file: prompt.md
+  placement: append
+  priority: 50
+  scope:
+    tasks: []
+    languages: []
+    frameworks: []
+    modes:
+    - agent

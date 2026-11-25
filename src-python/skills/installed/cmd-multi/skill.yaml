@@ -1,0 +1,12 @@
+name: cmd-multi
+version: 0.3.0
+title: '命令: /multi'
+description: 多模型方案生成—�? �?Agent 并行独立生成后综�?
+author: Yuncat System
+category: command
+icon: /
+tags:
+- command
+- slash
+- multi
+min_yuncat: 0.1.3

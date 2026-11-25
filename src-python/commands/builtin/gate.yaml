@@ -1,0 +1,6 @@
+# /gate — 质量门禁
+name: gate
+slash_command: /gate
+description: "质量门禁——lint→test→security→report"
+category: engineering
+workflow_template: quality_gate

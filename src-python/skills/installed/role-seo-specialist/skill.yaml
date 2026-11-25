@@ -1,0 +1,23 @@
+name: role-seo-specialist
+version: 0.3.0
+title: '角色: SEO 优化专家'
+description: '讨论引擎角色: ## 角色：SEO 优化专家 审查前端项目的搜索引擎优化： 1. Meta 标签——title/description/og:image
+  是否完整 2. 语义 HTML——h1-h6 层级、article/section/nav 使用 3.'
+author: Yuncat System
+category: role
+icon: 🖼�?
+tags:
+- role
+- deliberation
+- seo-specialist
+min_yuncat: 0.1.3
+prompt:
+  file: prompt.md
+  placement: append
+  priority: 50
+  scope:
+    tasks: []
+    languages: []
+    frameworks: []
+    modes:
+    - agent

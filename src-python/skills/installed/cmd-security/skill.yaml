@@ -1,0 +1,12 @@
+name: cmd-security
+version: 0.3.0
+title: '命令: /security'
+description: 安全审查——检查漏洞、密钥泄露、注入风�?
+author: Yuncat System
+category: command
+icon: /
+tags:
+- command
+- slash
+- security
+min_yuncat: 0.1.3

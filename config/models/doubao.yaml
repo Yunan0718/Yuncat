@@ -1,0 +1,69 @@
+provider: doubao
+name: 豆包 (字节跳动)
+base_url: https://ark.cn-beijing.volces.com/api/v3
+models_url: https://ark.cn-beijing.volces.com/api/v3/models
+website_url: https://console.volcengine.com/ark/region:ark+cn-beijing/apiKey
+api_key_url: https://console.volcengine.com/ark/region:ark+cn-beijing/apiKey
+model: doubao-seed-2-1-pro
+auth: api_key
+models:
+- id: doubao-seed-2-1-pro
+  power: 3
+  name: Seed 2.1 Pro
+  context: 262144
+  supports:
+  - text
+  - image
+  - tools
+  - thinking
+- id: doubao-seed-2-1-turbo
+  power: 1
+  name: Seed 2.1 Turbo
+  context: 262144
+  supports:
+  - text
+  - image
+  - tools
+  - thinking
+- id: doubao-seed-2-0-lite
+  power: 1
+  name: Seed 2.0 Lite
+  context: 262144
+  supports:
+  - text
+  - tools
+- id: doubao-seed-2-0-mini
+  power: 1
+  name: Seed 2.0 Mini
+  context: 262144
+  supports:
+  - text
+  - tools
+- id: doubao-seed-2-0-code-preview
+  power: 2
+  name: Seed 2.0 Code (Preview)
+  context: 262144
+  supports:
+  - text
+  - tools
+pricing:
+  doubao-seed-2-1-pro:
+    input: 3.2
+    output: 16
+    currency: CNY
+  doubao-seed-2-1-turbo:
+    input: 1
+    output: 4
+    currency: CNY
+  doubao-seed-2-0-lite:
+    input: 0.8
+    output: 2
+    currency: CNY
+  doubao-seed-2-0-mini:
+    input: 0.5
+    output: 1.5
+    currency: CNY
+  doubao-seed-2-0-code-preview:
+    input: 3.2
+    output: 16
+    currency: CNY

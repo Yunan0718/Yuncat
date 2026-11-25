@@ -1,0 +1,12 @@
+name: wf-code_review
+version: 0.3.0
+title: '工作�? code_review'
+description: 'DAG 工作流模板（4 节点�? 代码审查工作流：读取代码 �?静态检�?�?审查逻辑 �?生成建议'
+author: Yuncat System
+category: workflow
+icon: 🔍
+tags:
+- workflow
+- dag
+- code_review
+min_yuncat: 0.1.3

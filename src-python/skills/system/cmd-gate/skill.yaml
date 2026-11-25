@@ -1,0 +1,12 @@
+name: cmd-gate
+version: 0.3.0
+title: '命令: /gate'
+description: 质量门禁——lint→test→security→report
+author: Yuncat System
+category: command
+icon: /
+tags:
+- command
+- slash
+- gate
+min_yuncat: 0.1.3

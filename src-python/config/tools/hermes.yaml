@@ -1,0 +1,82 @@
+# Hermes Agent Tool Manifest (Phase 26 — Adapter v2)
+# 声明 Hermes 47+ 内置工具中适合暴露给 Yuncat ToolService 的子集
+
+agent: hermes
+version: "0.16.0"
+source: static
+
+tools:
+  # ---- 文件操作 ----
+  - name: hermes_file_read
+    description: "读取文件内容（通过 Hermes 内置工具）"
+    category: file
+    parameters:
+      type: object
+      properties:
+        path: { type: string, description: "文件路径" }
+      required: [path]
+
+  - name: hermes_file_write
+    description: "写入文件内容（通过 Hermes 内置工具）"
+    category: file
+    parameters:
+      type: object
+      properties:
+        path: { type: string, description: "文件路径" }
+        content: { type: string, description: "文件内容" }
+      required: [path, content]
+
+  # ---- 终端命令 ----
+  - name: hermes_shell_exec
+    description: "在终端中执行命令（通过 Hermes 内置 shell）"
+    category: shell
+    parameters:
+      type: object
+      properties:
+        command: { type: string, description: "要执行的命令" }
+        timeout_sec: { type: integer, default: 60 }
+      required: [command]
+
+  # ---- 搜索 ----
+  - name: hermes_web_search
+    description: "Web 搜索（通过 Hermes 内置搜索引擎）"
+    category: search
+    parameters:
+      type: object
+      properties:
+        query: { type: string, description: "搜索查询" }
+        max_results: { type: integer, default: 5 }
+      required: [query]
+
+  # ---- 代码执行 ----
+  - name: hermes_execute_code
+    description: "在沙箱中执行代码（Python/JavaScript/Bash）"
+    category: code
+    parameters:
+      type: object
+      properties:
+        language: { type: string, enum: [python, javascript, bash] }
+        code: { type: string, description: "要执行的代码" }
+      required: [language, code]
+
+  # ---- 浏览器 ----
+  - name: hermes_browser
+    description: "浏览器自动化——打开网页、截图、提取内容"
+    category: browser
+    parameters:
+      type: object
+      properties:
+        url: { type: string, description: "目标 URL" }
+        action: { type: string, enum: [navigate, screenshot, extract] }
+      required: [url]
+
+  # ---- Cron ----
+  - name: hermes_cron_schedule
+    description: "自然语言定时任务——'每天9点跑pytest'"
+    category: general
+    parameters:
+      type: object
+      properties:
+        description: { type: string, description: "自然语言描述定时任务" }
+        command: { type: string, description: "要执行的命令" }
+      required: [description, command]

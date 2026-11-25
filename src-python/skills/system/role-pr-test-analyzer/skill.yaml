@@ -1,0 +1,23 @@
+name: role-pr-test-analyzer
+version: 0.3.0
+title: '角色: PR 测试审查专家'
+description: '讨论引擎角色: ## 角色：PR 测试审查专家 审查 PR 的测试覆盖质量和完整性： 1. 行为覆盖率——修改的每个行为路径是否都有测试
+  2. 边界条件——null/�?极大值是否被覆盖 3. 回归防护——新增测试能否真正捕获回�?bug 4. 测试质量�?
+author: Yuncat System
+category: role
+icon: 🔍
+tags:
+- role
+- deliberation
+- pr-test-analyzer
+min_yuncat: 0.1.3
+prompt:
+  file: prompt.md
+  placement: append
+  priority: 50
+  scope:
+    tasks: []
+    languages: []
+    frameworks: []
+    modes:
+    - agent

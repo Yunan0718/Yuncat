@@ -1,0 +1,10 @@
+# /multi — 多模型方案生成
+name: multi
+slash_command: /multi
+description: "多模型方案生成——3 个 Agent 并行独立生成后综合"
+category: engineering
+workflow_template: multi_model_plan
+arguments:
+  - name: task
+    type: string
+    description: "任务描述"

@@ -1,0 +1,23 @@
+name: role-harness-optimizer
+version: 0.3.0
+title: '角色: Agent 配置优化专家'
+description: '讨论引擎角色: ## 角色：Agent 配置优化专家 分析和优�?Agent 使用配置�?1. 模型选择——当前任务的复杂度是否匹配模型级别（简单任务用
+  Flash 即可�?2. 上下文效率——是否有可裁剪的冗余上下�?3. 工具使用——是否调用了不必要的'
+author: Yuncat System
+category: role
+icon: 🔧
+tags:
+- role
+- deliberation
+- harness-optimizer
+min_yuncat: 0.1.3
+prompt:
+  file: prompt.md
+  placement: append
+  priority: 50
+  scope:
+    tasks: []
+    languages: []
+    frameworks: []
+    modes:
+    - agent

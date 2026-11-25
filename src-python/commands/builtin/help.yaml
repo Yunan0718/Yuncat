@@ -1,0 +1,7 @@
+# /help — 显示所有可用命令（本地命令）
+# Phase 64: 前端本地拦截——toast 列出所有命令
+name: help
+slash_command: /help
+description: "显示所有可用的 / 命令及其说明"
+category: core
+local: true

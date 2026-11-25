@@ -1,0 +1,80 @@
+# TypeScript/JavaScript Behavior Prompts — Phase 27 (10 条)
+
+ts-coding-standards: |
+  ## TypeScript 编码标准
+  - 公开 API 函数/组件必须有显式类型注解
+  - 使用 interface 定义对象形状，type 定义联合/元组
+  - 避免 any——使用 unknown 并安全缩窄
+  - React 组件 Props 使用命名 interface
+  - 不写 React.FC——直接用 function 声明
+
+ts-immutability: |
+  ## TypeScript 不可变性
+  - 使用展开运算符创建新对象/数组——不修改原值
+  - 函数参数加 Readonly<> 标记不可变意图
+  - 状态更新使用 immer 或 zustand 的不可变 set
+  - 避免 Object.assign 和直接属性赋值
+  - const 引用不可变，但内容可能变——注意深层对象
+
+ts-error-handling: |
+  ## TypeScript 错误处理
+  - async 函数用 try/catch 捕获错误并检查 error 类型
+  - 使用 Result 模式或 discriminated union 而非 throw
+  - React Error Boundary 捕获渲染错误
+  - API 错误统一格式：{ code, message, details }
+  - network error vs server error 分别处理
+
+ts-react: |
+  ## React 组件规范
+  - 组件按功能目录组织（Hero/Hero.tsx + HeroVisual.tsx）
+  - 自定义 Hook 以 use 前缀命名
+  - 使用 compound components 共享状态和交互语义
+  - 避免 prop drilling——用 context 或 zustand store
+  - 每个 useEffect 有正确的依赖数组和清理函数
+
+ts-testing: |
+  ## TypeScript 测试规范
+  - 使用 vitest 或 jest 框架
+  - 测试文件名 *.test.ts / *.spec.ts
+  - 组件测试优先测试行为而非实现细节
+  - 使用 userEvent 模拟真实用户交互
+  - Mock 外部依赖——API、数据库、第三方 SDK
+
+ts-state: |
+  ## TypeScript 状态管理
+  - Server 状态用 TanStack Query / SWR
+  - Client 状态用 Zustand / Jotai
+  - URL 状态用 search params 或 route segments
+  - 表单状态用 React Hook Form
+  - 不复制 server 状态到本地 store
+
+ts-performance: |
+  ## TypeScript 性能优化
+  - React.lazy + Suspense 代码分割
+  - useMemo/useCallback 仅在确实需要时使用
+  - 大列表使用虚拟滚动（react-window / virtuoso）
+  - 图片：WebP/AVIF、懒加载、明确宽高
+  - 第三方脚本异步加载或延迟加载
+
+ts-security: |
+  ## TypeScript 安全规范
+  - 不硬编码密钥——process.env 或 sessionStorage
+  - 不用 innerHTML/dangerouslySetInnerHTML（除非 sanitized）
+  - API token 存在 httpOnly cookie 或 memory 中
+  - CORS 配置精确——不设 allow_origins: ["*"]
+  - 所有用户输入在前后端双重验证
+
+ts-css: |
+  ## CSS 规范
+  - 使用 CSS 自定义属性定义 design tokens
+  - 动画只改 transform/opacity（compositor-friendly）
+  - 响应式用 clamp() 做流体排版
+  - prefers-reduced-motion 媒体查询
+  - 不硬编码色值——用语义化变量
+
+ts-imports: |
+  ## TypeScript 导入规范
+  - import type 用于仅类型导入
+  - 避免循环依赖——提取公共类型到 shared/types
+  - barrel 导出（index.ts）按需使用——别过度
+  - 相对导入不超过 3 层——否则用 path alias

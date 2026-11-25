@@ -1,0 +1,23 @@
+name: role-coordinator
+version: 0.3.0
+title: '角色: 协调�?
+description: '讨论引擎角色: 汇总各方意见，达成共识'
+author: Yuncat System
+category: role
+icon: 🎭
+tags:
+- role
+- deliberation
+- builtin
+- coordinator
+min_yuncat: 0.1.3
+prompt:
+  file: prompt.md
+  placement: append
+  priority: 50
+  scope:
+    tasks: []
+    languages: []
+    frameworks: []
+    modes:
+    - agent

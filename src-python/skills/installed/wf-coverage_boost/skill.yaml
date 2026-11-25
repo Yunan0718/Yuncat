@@ -1,0 +1,12 @@
+name: wf-coverage_boost
+version: 0.3.0
+title: '工作�? coverage_boost'
+description: 'DAG 工作流模板（3 节点�? 测试覆盖率提�? analyze �?generate �?verify'
+author: Yuncat System
+category: workflow
+icon: 📊
+tags:
+- workflow
+- dag
+- coverage_boost
+min_yuncat: 0.1.3

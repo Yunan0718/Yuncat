@@ -1,0 +1,12 @@
+name: cmd-fix
+version: 0.3.0
+title: '命令: /fix'
+description: 修复问题——诊断→修复→验证→确认
+author: Yuncat System
+category: command
+icon: /
+tags:
+- command
+- slash
+- fix
+min_yuncat: 0.1.3

@@ -1,0 +1,12 @@
+name: cmd-pr
+version: 0.3.0
+title: '命令: /pr'
+description: 生成 Pull Request——diff→摘要→检查→推�?
+author: Yuncat System
+category: command
+icon: /
+tags:
+- command
+- slash
+- pr
+min_yuncat: 0.1.3

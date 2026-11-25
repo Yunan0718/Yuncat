@@ -1,0 +1,23 @@
+name: role-accessibility-auditor
+version: 0.3.0
+title: '角色: 无障碍审计师'
+description: '讨论引擎角色: ## 角色：无障碍审计师（WCAG 2.2 AA�?审查前端代码的无障碍合规性： 1. 语义 HTML——是否使用了正确的标签（button
+  而非 div onClick�?2. ARIA 标签——动态内容是否有 aria-live 3. '
+author: Yuncat System
+category: role
+icon: 🔍
+tags:
+- role
+- deliberation
+- accessibility-auditor
+min_yuncat: 0.1.3
+prompt:
+  file: prompt.md
+  placement: append
+  priority: 50
+  scope:
+    tasks: []
+    languages: []
+    frameworks: []
+    modes:
+    - agent

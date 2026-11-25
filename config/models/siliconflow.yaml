@@ -1,0 +1,54 @@
+provider: siliconflow
+name: 硅基流动
+base_url: https://api.siliconflow.cn/v1
+models_url: https://api.siliconflow.cn/v1/models
+website_url: https://cloud.siliconflow.cn/account/ak
+api_key_url: https://cloud.siliconflow.cn/account/ak
+model: Qwen/Qwen3-235B-A22B
+auth: api_key
+models:
+- id: Qwen/Qwen3-235B-A22B
+  power: 2
+  name: Qwen3 235B
+  context: 32768
+  supports:
+  - text
+  - tools
+- id: Qwen/Qwen3-32B-Instruct
+  power: 2
+  name: Qwen3 32B
+  context: 32768
+  supports:
+  - text
+  - tools
+- id: deepseek-ai/DeepSeek-V3.2
+  power: 2
+  name: DeepSeek V3.2
+  context: 167936
+  supports:
+  - text
+  - tools
+- id: Pro/GLM-4.5
+  power: 3
+  name: GLM-4.5
+  context: 204800
+  supports:
+  - text
+  - tools
+pricing:
+  Qwen/Qwen3-235B-A22B:
+    input: 2
+    output: 4
+    currency: CNY
+  Qwen/Qwen3-32B-Instruct:
+    input: 0.5
+    output: 1
+    currency: CNY
+  deepseek-ai/DeepSeek-V3.2:
+    input: 1
+    output: 2
+    currency: CNY
+  Pro/GLM-4.5:
+    input: 5
+    output: 20
+    currency: CNY

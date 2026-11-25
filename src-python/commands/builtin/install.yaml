@@ -1,0 +1,14 @@
+# /install — AI 自动安装 Skill/MCP/Workflow
+name: install
+slash_command: /install
+description: "AI 自动配置：从 GitHub/URL 安装 Skill、MCP 服务器或工作流模板"
+category: config
+agent_routing:
+  mode: agent
+arguments:
+  - name: source
+    type: string
+    description: "GitHub URL 或 Skill/MCP 名称"
+  - name: type
+    type: string
+    description: "skill | mcp | workflow（自动检测）"

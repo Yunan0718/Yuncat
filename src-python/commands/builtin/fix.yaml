@@ -1,0 +1,10 @@
+# /fix — 修复 bug（CRAFT fix-loop）
+name: fix
+slash_command: /fix
+description: "修复问题——诊断→修复→验证→确认"
+category: engineering
+workflow_template: craft_fix_loop
+arguments:
+  - name: bug
+    type: string
+    description: "Bug 描述或错误信息"

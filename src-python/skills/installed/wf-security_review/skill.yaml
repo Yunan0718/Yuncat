@@ -1,0 +1,12 @@
+name: wf-security_review
+version: 0.3.0
+title: '工作�? security_review'
+description: 'DAG 工作流模板（2 节点�? 安全审查: security-reviewer 审查 �?生成安全报告'
+author: Yuncat System
+category: workflow
+icon: 🛡�?
+tags:
+- workflow
+- dag
+- security_review
+min_yuncat: 0.1.3

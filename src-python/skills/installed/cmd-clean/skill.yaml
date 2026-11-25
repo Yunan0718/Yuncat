@@ -1,0 +1,12 @@
+name: cmd-clean
+version: 0.3.0
+title: '命令: /clean'
+description: 清理死代码——扫描未使用的代码并移除
+author: Yuncat System
+category: command
+icon: /
+tags:
+- command
+- slash
+- clean
+min_yuncat: 0.1.3

@@ -1,0 +1,12 @@
+name: wf-data_analysis
+version: 0.3.0
+title: '工作�? data_analysis'
+description: 'DAG 工作流模板（4 节点�? 数据分析工作流：读取CSV �?分析数据 �?生成图表 �?输出报告'
+author: Yuncat System
+category: workflow
+icon: 📈
+tags:
+- workflow
+- dag
+- data_analysis
+min_yuncat: 0.1.3

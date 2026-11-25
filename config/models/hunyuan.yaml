@@ -1,0 +1,48 @@
+provider: hunyuan
+name: 腾讯混元
+base_url: https://api.hunyuan.cloud.tencent.com/v1
+models_url: https://api.hunyuan.cloud.tencent.com/v1/models
+website_url: https://console.cloud.tencent.com/hunyuan
+api_key_url: https://console.cloud.tencent.com/hunyuan
+model: hy4-preview
+auth: api_key
+models:
+- id: hy4-preview
+  power: 2
+  name: Hy4 Preview
+  context: 1000000
+  supports:
+  - text
+  - tools
+  - thinking
+- id: hy3
+  power: 2
+  name: Hy3
+  context: 196608
+  supports:
+  - text
+  - tools
+  - thinking
+- id: hunyuan-turbos
+  power: 2
+  name: Hunyuan TurboS
+  context: 262144
+  supports:
+  - text
+  - tools
+- id: hunyuan-t1
+  power: 2
+  name: Hunyuan T1
+  context: 262144
+  supports:
+  - text
+  - tools
+  - thinking
+- id: hunyuan-a13b
+  power: 2
+  name: Hunyuan A13B
+  context: 262144
+  supports:
+  - text
+  - tools
+  - thinking

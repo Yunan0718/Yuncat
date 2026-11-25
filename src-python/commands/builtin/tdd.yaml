@@ -1,0 +1,10 @@
+# /tdd — TDD 循环
+name: tdd
+slash_command: /tdd
+description: "测试驱动开发——先写测试、再实现、最后重构"
+category: engineering
+workflow_template: tdd_loop
+arguments:
+  - name: feature
+    type: string
+    description: "要开发的功能描述"

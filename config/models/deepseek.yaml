@@ -1,0 +1,66 @@
+provider: deepseek
+name: DeepSeek
+base_url: https://api.deepseek.com/v1
+models_url: https://api.deepseek.com/v1/models
+website_url: https://platform.deepseek.com/api_keys
+api_key_url: https://platform.deepseek.com/api_keys
+model: deepseek-v4-flash
+auth: api_key
+models:
+- id: deepseek-flash
+  power: 1
+  name: DeepSeek V4.1 Flash
+  context: 1000000
+  supports:
+  - text
+  - image
+  - tools
+  - thinking
+- id: deepseek-v4-flash
+  power: 1
+  name: DeepSeek V4 Flash
+  context: 1000000
+  supports:
+  - text
+  - tools
+  - thinking
+- id: deepseek-v4-pro
+  power: 3
+  name: DeepSeek V4 Pro
+  context: 1000000
+  supports:
+  - text
+  - tools
+  - thinking
+- id: deepseek-v4-flash-vision-exp
+  power: 1
+  name: DeepSeek V4 Flash Vision (Exp)
+  context: 1000000
+  supports:
+  - text
+  - image
+  - tools
+  - thinking
+pricing:
+  # deepseek-flash 定价按 flash 档（与 deepseek-v4-flash 同档）估算，
+  # 官方调价后请在 设置 > 模型配置 点「从目录同步」覆盖。
+  deepseek-flash:
+    input: 0.14
+    output: 0.28
+    currency: USD
+    cached_input: 0.0028
+  deepseek-v4-flash:
+    input: 0.14
+    output: 0.28
+    currency: USD
+    cached_input: 0.0028
+  deepseek-v4-pro:
+    input: 0.435
+    output: 0.87
+    currency: USD
+    cached_input: 0.0036
+  deepseek-v4-flash-vision-exp:
+    input: 0.14
+    output: 0.28
+    currency: USD
+    cached_input: 0.0028

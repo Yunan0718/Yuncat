@@ -1,0 +1,13 @@
+name: wf-architect_editor
+version: 0.3.0
+title: '工作�? architect_editor'
+description: 'DAG 工作流模板（3 节点�? Architect/Editor 双模�? Architect(Flash)规划 �?Editor(Pro)编码
+  �?Reviewer(Flash)验证'
+author: Yuncat System
+category: workflow
+icon: 🏗�?
+tags:
+- workflow
+- dag
+- architect_editor
+min_yuncat: 0.1.3

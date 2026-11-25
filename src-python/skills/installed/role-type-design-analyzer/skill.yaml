@@ -1,0 +1,23 @@
+name: role-type-design-analyzer
+version: 0.3.0
+title: '角色: 类型设计分析专家'
+description: '讨论引擎角色: ## 角色：类型设计分析专�?审查 Type System 设计的正确性和表达力： 1. 类型是否精确表达了业务约束（避免
+  stringly-typed�?2. 是否过度使用 any/unknown（应用代码中应为 0�?3. 联合类型 v'
+author: Yuncat System
+category: role
+icon: ⚙️
+tags:
+- role
+- deliberation
+- type-design-analyzer
+min_yuncat: 0.1.3
+prompt:
+  file: prompt.md
+  placement: append
+  priority: 50
+  scope:
+    tasks: []
+    languages: []
+    frameworks: []
+    modes:
+    - agent

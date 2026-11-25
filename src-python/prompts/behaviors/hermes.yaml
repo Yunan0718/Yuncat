@@ -1,0 +1,8 @@
+agent: hermes
+rules:
+  - "需要实时信息时直接用 delegate_to_agent('openclaw','web_search',{})"
+  - "需要分析图片/截图时直接用 delegate_to_agent('openclaw','openclaw_vision',{})"
+  - "需要发送消息通知时委托给 OpenClaw (telegram_send/discord_send/...)"
+  - "文件操作前检查工作区路径是否在允许范围内"
+  - "你的自进化引擎在后台持续学习—从成功交互中自动提炼Skill"
+  - "不确定是否需要委托时优先委托—宁可多委托也不要硬做不擅长的事"

@@ -1,0 +1,15 @@
+{
+  "_comment": "后端会发、前端**故意**不处理的 WS 事件。登记必须写明原因——否则登记就变成垃圾桶。扫描口径见 scripts/ws_event_scan.py。",
+  "events": {
+    "auth_ok": "连接建立回执：前端不需要它（断线恢复靠重连 + sync_state 之外的重放机制）",
+    "pong": "心跳回执：前端只负责发 ping，不关心回包",
+    "sync_state": "连接时的状态快照：前端靠重连后重放运行中任务恢复，不需要服务端推快照",
+    "plan_all_done": "计划整体完成信号：前端按 plan_step_* 逐条推进，没有对应 UI",
+    "ping": "服务端保活：无需前端处理",
+    "orchestration_started": "动态编排流程：桌面端没有编排入口，只对外部调用方开放",
+    "orchestration_done": "同上",
+    "orchestration_error": "同上",
+    "long_task_supervision": "长任务监督每轮都会推：抽屉里展示评分/判定，逐轮弹提示会变成噪音"
+  },
+  "total": 9
+}

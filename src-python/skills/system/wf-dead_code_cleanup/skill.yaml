@@ -1,0 +1,12 @@
+name: wf-dead_code_cleanup
+version: 0.3.0
+title: '工作�? dead_code_cleanup'
+description: 'DAG 工作流模板（3 节点�? 死代码清�? scan �?remove �?verify'
+author: Yuncat System
+category: workflow
+icon: 🧹
+tags:
+- workflow
+- dag
+- dead_code_cleanup
+min_yuncat: 0.1.3

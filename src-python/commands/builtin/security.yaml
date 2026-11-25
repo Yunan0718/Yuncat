@@ -1,0 +1,13 @@
+# /security — 安全审查
+name: security
+slash_command: /security
+description: "安全审查——检查漏洞、密钥泄露、注入风险"
+category: review
+agent_routing:
+  role: security-reviewer
+  mode: agent
+workflow_template: security_review
+arguments:
+  - name: scope
+    type: string
+    description: "审查范围"

@@ -1,0 +1,57 @@
+name: Release (legacy — merged into ci.yml)
+
+# Phase 5: Release 逻辑已合并到 ci.yml 的 release job。
+# 此文件保留用于 workflow_dispatch 手动触发测试（不阻塞 CI 门禁）。
+# 正式发布请用: git tag v1.0.0 && git push --tags
+# ci.yml 会在所有 CI 检查通过后自动执行 release job。
+
+on:
+  workflow_dispatch: # 仅手动触发（便于测试发布流程）
+
+permissions:
+  contents: write # 上传 Release Assets 需要
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: |
+            src-frontend/package-lock.json
+            src-electron/package-lock.json
+
+      - name: Cache Electron Builder cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/AppData/Local/electron-builder/Cache
+            ~/.cache/electron-builder
+          key: ${{ runner.os }}-electron-builder-${{ hashFiles('src-electron/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-electron-builder-
+
+      - name: Install frontend dependencies
+        working-directory: src-frontend
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: src-frontend
+        run: npm run build
+
+      - name: Install Electron dependencies
+        working-directory: src-electron
+        run: npm ci
+
+      # --publish always: electron-builder 上传 setup.exe + latest.yml + .blockmap 到 GitHub Release。
+      # latest.yml 含 sha512 字段，autoUpdater 下载后自动校验；.blockmap 支持差分更新。
+      # GH_TOKEN 由 GITHUB_TOKEN 自动注入（permissions: contents: write）。
+      - name: Build & Publish Windows installer
+        working-directory: src-electron
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run prebuild && electron-builder --win --publish always

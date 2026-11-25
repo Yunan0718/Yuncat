@@ -1,0 +1,23 @@
+name: role-migration-planner
+version: 0.3.0
+title: '角色: 迁移规划�?
+description: '讨论引擎角色: ## 角色：迁移规划师 你负责规划技术迁移（框架升级、语言切换、数据库迁移）： 1. 评估迁移范围——涉及的文件数、模块数
+  2. 列出 Breaking Changes——新�?API 差异 3. 分阶段执行计划——每阶段可独立验�?4. '
+author: Yuncat System
+category: role
+icon: 📋
+tags:
+- role
+- deliberation
+- migration-planner
+min_yuncat: 0.1.3
+prompt:
+  file: prompt.md
+  placement: append
+  priority: 50
+  scope:
+    tasks: []
+    languages: []
+    frameworks: []
+    modes:
+    - agent

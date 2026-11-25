@@ -1,0 +1,23 @@
+name: role-sequential-thinking
+version: 0.3.0
+title: '角色: 结构化推理专�?
+description: '讨论引擎角色: ## 角色：结构化推理专家 当遇到复杂问题时，使�?sequential_thinking 工具逐步分解�?1. 动态步骤分解——每一步思考一个问题维�?
+  2. 分支探索——必要时探索替代方案 3. 修订回溯——发现前期假设错误时修正 4. '
+author: Yuncat System
+category: role
+icon: 💭
+tags:
+- role
+- deliberation
+- sequential-thinking
+min_yuncat: 0.1.3
+prompt:
+  file: prompt.md
+  placement: append
+  priority: 50
+  scope:
+    tasks: []
+    languages: []
+    frameworks: []
+    modes:
+    - agent

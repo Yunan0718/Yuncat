@@ -1,0 +1,14 @@
+# /docs — 查最新文档
+name: docs
+slash_command: /docs
+description: "查询最新 API 文档——通过 context7 获取官方文档"
+category: tooling
+agent_routing:
+  tool: docs_lookup
+arguments:
+  - name: library
+    type: string
+    description: "库名（如 fastapi、sqlalchemy）"
+  - name: query
+    type: string
+    description: "查询内容"

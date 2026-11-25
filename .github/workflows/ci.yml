@@ -1,0 +1,302 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']  # Phase 5: tag 触发 release job（needs: ci 依赖）
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ---- Python 全量测试（含中文路径 + 长路径） ----
+  python:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        python-version: ["3.12"]  # Phase 5: 统一 3.12（3.11 接近 EOL，3.13/3.14 过新）
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[test]"
+
+      - name: Unit tests
+        run: python -m pytest tests/unit/ -v --tb=short
+
+      - name: Integration tests
+        run: python -m pytest tests/integration/ -v --tb=short
+
+      - name: Contract tests (Sidecar startup protocol)
+        run: python -m pytest tests/contract/ -v --tb=short
+
+      - name: CI path resilience tests (Chinese + long path)
+        run: python -m pytest tests/ci/ -v --tb=short
+
+      - name: Backend smoke check (imports + routes + providers)
+        # 2026-10-22：health_check.py 之前没人跑，模块分层后它的导入路径就失效了
+        # （一直停在旧路径上）。接进 CI，避免再次腐化。
+        run: python scripts/health_check.py
+
+  # ---- TypeScript 类型检查 + ESLint + 单元测试 ----
+  typescript:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src-frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: src-frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript type check
+        run: npx tsc --noEmit
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Frontend unit tests
+        run: npx vitest --run
+
+  # ---- E2E 测试（Playwright / Chromium / 无 Python 后端） ----
+  e2e:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src-frontend
+    env:
+      CI: "1"
+      PLAYWRIGHT_BASE_URL: "http://localhost:1420"  # C1 修复：Vite strictPort=1420，必须与 health-check 一致
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: src-frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('src-frontend/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      - name: Install Playwright Chromium
+        run: npx playwright install chromium
+
+      - name: Start Vite dev server
+        run: |
+          npm run dev &
+          for i in $(seq 1 60); do
+            if (echo > /dev/tcp/localhost/1420) 2>/dev/null; then break; fi
+            sleep 1
+          done
+
+      - name: Run Playwright tests
+        run: npx playwright test e2e
+
+  # ---- Electron Windows 构建 ----
+  electron-build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: |
+            src-frontend/package-lock.json
+            src-electron/package-lock.json
+
+      - name: Cache Electron Builder cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/AppData/Local/electron-builder/Cache
+            ~/.cache/electron-builder
+          key: ${{ runner.os }}-electron-builder-${{ hashFiles('src-electron/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-electron-builder-
+
+      - name: Install frontend dependencies
+        working-directory: src-frontend
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: src-frontend
+        run: npm run build
+
+      - name: Install Electron dependencies
+        working-directory: src-electron
+        run: npm ci
+
+      - name: Build Electron (Windows)
+        working-directory: src-electron
+        run: npm run prebuild && npm run build:win
+
+  # ---- Electron 主进程单测（多窗口管理，2026-09-15）----
+  # 多窗口的窗口登记/几何状态/关闭语义都在 src-electron/windows.js，用 Node 内置 test
+  # runner + 假 BrowserWindow 验证，不需要 GUI，CI 上可直接跑。
+  electron-unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Electron main-process unit tests
+        run: node --test "tests/electron/**/*.test.mjs"
+
+  # ---- Phase 39: 结构测试 ----
+  structural:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip  # M23 修复：与 python job 对齐，缓存 pip 依赖加速 structural
+      - run: pip install -e ".[ci]"
+      - run: python -m pytest tests/structural/ -v
+
+  # ---- Phase 39: 自定义 lint 规则 ----
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: python src-python/tools/lint_rules.py
+
+  # ---- Phase 39: GC Agent 语法检查 ----
+  gc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -e ".[ci]"
+      - run: python -c "import asyncio; from services.gc_agent import GCAgent; print('GC Agent import OK')"
+
+  # ---- Phase 46: 构建时间追踪 ----
+  build-timing:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: src-electron/package-lock.json
+      - name: Install Electron dependencies
+        working-directory: src-electron
+        run: npm ci
+      - run: node src-electron/scripts/prebuild.js
+
+  # ---- Phase 5: 依赖审计（npm audit + pip-audit） ----
+  # 初始 continue-on-error=true 非阻塞——已知漏洞不阻断 CI。
+  # 待漏洞修复后改为阻塞（删除 continue-on-error 行 + 从 release needs 移除）。
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+
+      - name: Install pip-audit
+        run: pip install pip-audit
+
+      - name: Python dependency audit (pip-audit)
+        continue-on-error: true  # Phase 5: 非阻塞，待漏洞修复后改阻塞
+        run: |
+          pip install -e ".[test]"
+          pip-audit  # 扫描已安装环境，检测已知 CVE
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: src-frontend/package-lock.json
+
+      - name: Frontend npm audit
+        continue-on-error: true  # Phase 5: 非阻塞
+        working-directory: src-frontend
+        run: npm audit --audit-level=high || true
+
+      - name: Electron npm audit
+        continue-on-error: true  # Phase 5: 非阻塞
+        working-directory: src-electron
+        run: npm audit --audit-level=high || true
+
+  # ---- Phase 5: Release（仅 tag 触发，依赖全部 CI job 通过） ----
+  # 原 release.yml 已合并到此——needs 确保所有 CI 检查通过后才发布。
+  # industry standard: release job 在 CI workflow 内，用 needs 做门禁。
+  release:
+    needs: [python, typescript, e2e, electron-build, electron-unit, structural, lint, gc, build-timing, audit]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: windows-latest
+    permissions:
+      contents: write  # 上传 Release Assets 需要
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: |
+            src-frontend/package-lock.json
+            src-electron/package-lock.json
+
+      - name: Cache Electron Builder cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/AppData/Local/electron-builder/Cache
+            ~/.cache/electron-builder
+          key: ${{ runner.os }}-electron-builder-${{ hashFiles('src-electron/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-electron-builder-
+
+      - name: Install frontend dependencies
+        working-directory: src-frontend
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: src-frontend
+        run: npm run build
+
+      - name: Install Electron dependencies
+        working-directory: src-electron
+        run: npm ci
+
+      # --publish always: electron-builder 上传 setup.exe + latest.yml + .blockmap 到 GitHub Release。
+      # latest.yml 含 sha512 字段，autoUpdater 下载后自动校验；.blockmap 支持差分更新。
+      - name: Build & Publish Windows installer
+        working-directory: src-electron
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run prebuild && electron-builder --win --publish always

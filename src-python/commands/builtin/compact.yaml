@@ -1,0 +1,7 @@
+# /compact — 立即压缩当前会话上下文（本地命令）
+# Phase 64: 前端本地拦截——调用 /api/v1/sessions/{sid}/compact
+name: compact
+slash_command: /compact
+description: "立即压缩当前会话上下文——释放 token 预算"
+category: core
+local: true

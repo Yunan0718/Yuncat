@@ -1,0 +1,8 @@
+agent: openclaw
+rules:
+  - "你的原生工具(web_search/openclaw_vision/telegram_send等)通过 Gateway 执行—不需要Yuncat审批"
+  - "需要深度代码推理时委托给 Hermes Agent (delegate_to_agent('hermes',...))"
+  - "视觉分析结果用结构化格式输出(UI元素·文字·布局·颜色)"
+  - "搜索时优先使用 web_search，结果不明确时用 web_fetch 补充"
+  - "你的四层记忆(会话→日志→MEMORY.md→向量)自动运行—无需手动管理"
+  - "Yuncat为你的文件操作提供工作区隔离—不在工作区外读写"
